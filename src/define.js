@@ -1,9 +1,9 @@
-/*! CREATE MODULE */
+/*! DEFINE */
 /* -----------------
- * Create an application (sub)module.
+ * Define an application (sub)module.
  *
  *     // Create a new module
- *     createModule("APP.MyModule.MySubModule", function(){
+ *     define("APP.MyModule.MySubModule", function(){
  *         return {
  *             myProp   : "Your property value",
  *             myMethod : function( arg1, arg2 ){
@@ -13,7 +13,7 @@
  *     });
  *
  *     // Create a single method
- *     createModule("APP.mySingleMethod", function(){
+ *     define("APP.mySingleMethod", function(){
  *         return function( arg1, arg2 ){
  *             // Your method contents
  *         };
@@ -23,7 +23,7 @@
  * Licensed under MIT License
  * See: https://raw.github.com/Mytho/APP.js/master/LISENCE.md
  */
-var createModule = (function(){
+var define = (function(){
 
 	var nsDelimiter = ".";
 

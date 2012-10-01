@@ -6,7 +6,7 @@
  * Licensed under MIT License.
  * See: https://raw.github.com/Mytho/APP.js/master/LISENCE.md
  */
-createModule("APP.Core", function(){
+define("APP.Core", function(){
 
 	var Core = {},
 		config = {
@@ -71,7 +71,7 @@ createModule("APP.Core", function(){
 		return APP.Core.log(arguments);
 	}
 
-	createModule("APP.start", function(){
+	define("APP.start", function(){
 		return Core.start;
 	});
 
