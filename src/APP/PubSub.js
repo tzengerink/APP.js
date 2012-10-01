@@ -28,38 +28,38 @@ createModule("APP.PubSub", function(){
 	var PubSub = {},
 		subscriptions = {};
 
-  // Unsubscribe
-  PubSub.off = function( topic ){
+	// Unsubscribe
+	PubSub.off = function( topic ){
 		if (typeof topic !== "string") {
 			throw new Error("Topic must be a string");
 		}
-    subscriptions[topic] = [];
-  };
+		subscriptions[topic] = [];
+	};
 
-  // Subscribe
-  PubSub.on = function( topic, fn ){
+	// Subscribe
+	PubSub.on = function( topic, fn ){
 		if (typeof topic !== "string") {
 			throw new Error("Topic must be a string");
 		}
 		if (typeof fn !== "function") {
 			throw new Error("Callback must be a function");
 		}
-    if (typeof subscriptions[topic] === "undefined") {
-      subscriptions[topic] = [];
-    }
-    subscriptions[topic].push(fn);
-  };
+		if (typeof subscriptions[topic] === "undefined") {
+			subscriptions[topic] = [];
+		}
+		subscriptions[topic].push(fn);
+	};
 
-  // Publish
-  PubSub.trigger = function( topic, args ){
+	// Publish
+	PubSub.trigger = function( topic, args ){
 		if (typeof topic !== "string") {
 			throw new Error("Topic must be a string");
 		}
-    for (t in subscriptions[topic]) {
-      subscriptions[topic][t](args);
-    }
-  };
+		for (t in subscriptions[topic]) {
+			subscriptions[topic][t](args);
+		}
+	};
 
-  return PubSub;
+	return PubSub;
 
 })();
