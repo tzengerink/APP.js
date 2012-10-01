@@ -19,7 +19,7 @@ createModule("APP.Core", function(){
 	// -------
 
 	var handleSubmodules = function( module, start ) {
-		var method = (start && config.moduleStopMethod) || config.moduleStopMethod;
+		var method = start ? config.moduleStopMethod : config.moduleStopMethod;
 		for (prop in module) {
 			if (typeof module[prop] === "object") {
 				if (prop !== "Core" && module[prop].hasOwnProperty(method)) {
@@ -54,11 +54,11 @@ createModule("APP.Core", function(){
 		for (k in args) {
 			Core.config(k, args[k]);
 		}
-		startSubmodules(APP);
+		handleSubmodules(APP);
 	};
 
 	Core.stop = function(){
-		stopSubmodules(APP);
+		handleSubmodules(APP, false);
 	};
 
 	// SETUP
