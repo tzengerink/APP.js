@@ -10,20 +10,22 @@ createModule("APP.Core", function(){
 
 	var Core = {},
 		config = {
-			"moduleInitMethod" : "init"
+			"moduleStartMethod" : "start",
+			"moduleStopMethod"  : "stop"
 		},
 		logHistory = [];
 
 	// PRIVATE
 	// -------
 
-	var initSubmodules = function( module ) {
+	var handleSubmodules = function( module, start ) {
+		var method = (start && config.moduleStopMethod) || config.moduleStopMethod;
 		for (prop in module) {
 			if (typeof module[prop] === "object") {
-				if (prop !== "Core" && module[prop].hasOwnProperty(config.moduleInitMethod)) {
-					module[prop][config.moduleInitMethod].call();
+				if (prop !== "Core" && module[prop].hasOwnProperty(method)) {
+					module[prop][method].call();
 				}
-				initSubmodules(module[prop]);
+				handleSubmodules(module[prop], start);
 			}
 		}
 	};
@@ -48,11 +50,15 @@ createModule("APP.Core", function(){
 		}
 	};
 
-	Core.init = function( args ){
+	Core.start = function( args ){
 		for (k in args) {
 			Core.config(k, args[k]);
 		}
-		initSubmodules(APP);
+		startSubmodules(APP);
+	};
+
+	Core.stop = function(){
+		stopSubmodules(APP);
 	};
 
 	// SETUP
