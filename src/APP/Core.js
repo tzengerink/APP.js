@@ -36,7 +36,13 @@ createModule("APP.Core", function(){
 		for (k in args) {
 			Core.config(k, args[k]);
 		}
-		// TODO: finish auto initializing of submodules.
+		// TODO: Recursive initializing of (sub)modules.
+		for (prop in APP) {
+			log(prop);
+			if (typeof APP[prop] === "object" && APP[prop].hasOwnProperty("init")) {
+				APP[prop].init();
+			}
+		}
 	};
 
 	// SETUP
