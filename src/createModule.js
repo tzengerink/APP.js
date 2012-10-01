@@ -2,7 +2,7 @@
  * Create Module
  * -------------
  *
- * Create a (sub)module.
+ * Create an application (sub)module.
  *
  *     // Create a new module
  *     createModule("APP.MyModule.MySubModule", function(){
