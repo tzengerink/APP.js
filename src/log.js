@@ -2,6 +2,8 @@
  * Log
  * ---
  *
+ * Shorthand access to APP.Core.log()
+ *
  *     // Log your variables to the console
  *     log("Your variables", ["to", "the", "console"]);
  *
@@ -10,7 +12,5 @@
  * See: https://raw.github.com/Mytho/APP.js/master/LISENCE.md
  */
 var log = function(){
-		if (win.console) {
-			console.log(Array.prototype.slice.call(arguments));
-		}
+	return APP.Core.log(arguments);
 };
