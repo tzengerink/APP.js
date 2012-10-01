@@ -20,7 +20,7 @@ createModule("APP.Core", function(){
 	// -------
 
 	var handleSubmodules = function( module, start ) {
-		var method = start ? config.moduleStopMethod : config.moduleStopMethod;
+		var method = start ? config.moduleStartMethod : config.moduleStopMethod;
 		for (prop in module) {
 			if (typeof module[prop] === "object") {
 				if (prop !== "Core" && module[prop].hasOwnProperty(method)) {
