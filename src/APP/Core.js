@@ -64,6 +64,10 @@ createModule("APP.Core", function(){
 	// SETUP
 	// -----
 
+	createModule("APP.start", function(){
+		return Core.start;
+	});
+
 	return Core;
 
 });
