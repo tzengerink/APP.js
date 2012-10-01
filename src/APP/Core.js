@@ -48,14 +48,14 @@ createModule("APP.Core", function(){
 		logHistory.push(arguments);
 		if (config.debug && window.console) {
 			for (var i = arguments.length; i > 0; i--) {
-				console.log(arguments[i-1]);
+				console.log(arguments[i - 1]);
 			}
 		}
 	};
 
 	Core.start = function( args ){
 		for (k in args) {
-			Core.config(k, args[k]);
+			config[k] = args[k];
 		}
 		handleSubmodules(APP);
 	};
