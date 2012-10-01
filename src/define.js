@@ -1,5 +1,5 @@
-/*! DEFINE */
-/* -----------------
+/* DEFINE
+ * ------
  * Define an application (sub)module.
  *
  *     // Create a new module

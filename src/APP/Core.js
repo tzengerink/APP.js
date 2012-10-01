@@ -1,5 +1,5 @@
-/*! CORE */
-/* --------
+/* CORE
+ * ----
  * Core utilities for the application.
  *
  * Copyright (c) 2012, T. Zengerink
