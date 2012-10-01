@@ -30,11 +30,20 @@ createModule("APP.PubSub", function(){
 
   // Unsubscribe
   PubSub.off = function( topic ){
+		if (typeof topic !== "string") {
+			throw new Error("Topic must be a string");
+		}
     subscriptions[topic] = [];
   };
 
   // Subscribe
   PubSub.on = function( topic, fn ){
+		if (typeof topic !== "string") {
+			throw new Error("Topic must be a string");
+		}
+		if (typeof fn !== "function") {
+			throw new Error("Callback must be a function");
+		}
     if (typeof subscriptions[topic] === "undefined") {
       subscriptions[topic] = [];
     }
@@ -43,8 +52,11 @@ createModule("APP.PubSub", function(){
 
   // Publish
   PubSub.trigger = function( topic, args ){
+		if (typeof topic !== "string") {
+			throw new Error("Topic must be a string");
+		}
     for (t in subscriptions[topic]) {
-      typeof subscriptions[topic][t] === "function" && subscriptions[topic][t](args);
+      subscriptions[topic][t](args);
     }
   };
 
