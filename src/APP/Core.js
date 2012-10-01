@@ -9,8 +9,24 @@
 createModule("APP.Core", function(){
 
 	var Core = {},
-		config = {},
+		config = {
+			"moduleInitMethod" : "init"
+		},
 		logHistory = [];
+
+	// PRIVATE
+	// -------
+
+	var initSubmodules = function( module ) {
+		for (prop in module) {
+			if (typeof module[prop] === "object") {
+				if (prop !== "Core" && module[prop].hasOwnProperty(config.moduleInitMethod)) {
+					module[prop][config.moduleInitMethod].call();
+				}
+				initSubmodules(module[prop]);
+			}
+		}
+	};
 
 	// PUBLIC
 	// ------
@@ -36,13 +52,7 @@ createModule("APP.Core", function(){
 		for (k in args) {
 			Core.config(k, args[k]);
 		}
-		// TODO: Recursive initializing of (sub)modules.
-		for (prop in APP) {
-			log(prop);
-			if (typeof APP[prop] === "object" && APP[prop].hasOwnProperty("init")) {
-				APP[prop].init();
-			}
-		}
+		initSubmodules(APP);
 	};
 
 	// SETUP
