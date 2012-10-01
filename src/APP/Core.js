@@ -9,10 +9,21 @@
 createModule("APP.Core", function(){
 
 	var Core = {},
+		config = {},
 		logHistory = [];
 
 	// PUBLIC
 	// ------
+
+	Core.config = function( key, value ){
+		if (typeof value !== "undefined") {
+			config[key] = value;
+		}
+		if (typeof config[key] !== "undefined") {
+			return config[key];
+		}
+		return config;
+	};
 
 	Core.log = function(){
 		logHistory.push(arguments);
@@ -21,8 +32,17 @@ createModule("APP.Core", function(){
 		}
 	};
 
-	Core.init = function(){
-		// TODO: finish auto initializing of submodules.
+	Core.init = function( args ){
+		for (k in args) {
+			Core.config(k, args[k]);
+		}
+		// TODO: Recursive initializing of (sub)modules.
+		for (prop in APP) {
+			log(prop);
+			if (typeof APP[prop] === "object" && APP[prop].hasOwnProperty("init")) {
+				APP[prop].init();
+			}
+		}
 	};
 
 	// SETUP
