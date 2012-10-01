@@ -64,6 +64,10 @@ createModule("APP.Core", function(){
 	// SETUP
 	// -----
 
+	var log = function(){
+		return APP.Core.log(arguments);
+	}
+
 	createModule("APP.start", function(){
 		return Core.start;
 	});
