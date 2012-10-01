@@ -47,7 +47,7 @@ createModule("APP.Core", function(){
 	Core.log = function(){
 		logHistory.push(arguments);
 		if (config.debug && window.console) {
-			for (arg in arguments) {
+			for (i in arguments[i]) {
 				console.log(arg);
 			}
 		}
