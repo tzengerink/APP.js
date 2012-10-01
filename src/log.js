@@ -1,7 +1,5 @@
-/*
- * Log
- * ---
- *
+/*! LOG */
+/* -------
  * Shorthand access to APP.Core.log()
  *
  *     // Log your variables to the console

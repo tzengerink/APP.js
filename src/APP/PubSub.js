@@ -1,7 +1,5 @@
-/*
- * PubSub
- * ------
- *
+/*! PUBSUB */
+/* ----------
  * Basic PubSub functionality to supply the possiblity of decoupled application
  * modules.
  *

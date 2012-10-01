@@ -1,7 +1,5 @@
-/*
- * init
- * ----
- *
+/*! INIT */
+/* --------
  * Initialize the application (Shorthand access to APP.Core.init).
  *
  *     APP.init({
@@ -14,5 +12,5 @@
  * See: https://raw.github.com/Mytho/APP.js/master/LISENCE.md
  */
 createModule("APP.init", function(){
-	return APP.Core.init(arguments);
+	return APP.Core.init;
 })();
