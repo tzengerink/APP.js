@@ -9,10 +9,21 @@
 createModule("APP.Core", function(){
 
 	var Core = {},
+		config = {},
 		logHistory = [];
 
 	// PUBLIC
 	// ------
+
+	Core.config = function( key, value ){
+		if (typeof value !== "undefined") {
+			config[key] = value;
+		}
+		if (typeof config[key] !== "undefined") {
+			return config[key];
+		}
+		return config;
+	};
 
 	Core.log = function(){
 		logHistory.push(arguments);
@@ -21,7 +32,10 @@ createModule("APP.Core", function(){
 		}
 	};
 
-	Core.init = function(){
+	Core.init = function( args ){
+		for (k in args) {
+			Core.config(k, args[k]);
+		}
 		// TODO: finish auto initializing of submodules.
 	};
 
