@@ -1,7 +1,5 @@
-/*
- * Create Module
- * -------------
- *
+/*! CREATE MODULE */
+/* -----------------
  * Create an application (sub)module.
  *
  *     // Create a new module
