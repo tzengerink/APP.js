@@ -60,4 +60,4 @@ createModule("APP.PubSub", function(){
 
 	return PubSub;
 
-})();
+});

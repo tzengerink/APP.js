@@ -15,10 +15,10 @@ createModule("APP.Core", function(){
 	// ------
 
 	Core.log = function(){
-		//logHistory.push(arguments);
-		//if (window.console) {
-			//console.log(Array.prototype.slice.call(arguments));
-		//}
+		logHistory.push(arguments);
+		if (window.console) {
+			console.log(Array.prototype.slice.call(arguments));
+		}
 	};
 
 	Core.init = function(){
@@ -30,4 +30,4 @@ createModule("APP.Core", function(){
 
 	return Core;
 
-})();
+});
