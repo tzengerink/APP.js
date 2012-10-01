@@ -10,8 +10,9 @@ createModule("APP.Core", function(){
 
 	var Core = {},
 		config = {
-			"moduleStartMethod" : "start",
-			"moduleStopMethod"  : "stop"
+			debug             : false,
+			moduleStartMethod : "start",
+			moduleStopMethod  : "stop"
 		},
 		logHistory = [];
 
@@ -45,7 +46,7 @@ createModule("APP.Core", function(){
 
 	Core.log = function(){
 		logHistory.push(arguments);
-		if (window.console) {
+		if (config.debug && window.console) {
 			for (arg in arguments) {
 				console.log(arg);
 			}
@@ -66,7 +67,7 @@ createModule("APP.Core", function(){
 	// SETUP
 	// -----
 
-	var log = function(){
+	window.log = function(){
 		return APP.Core.log(arguments);
 	}
 
