@@ -13,4 +13,4 @@
  */
 createModule("APP.init", function(){
 	return APP.Core.init;
-})();
+});
