@@ -7,42 +7,37 @@
  * See: https://raw.github.com/Mytho/APP.js/master/LISENCE.md
  */
 var APP = APP || {};
-APP.Core = (function(){
+APP.Core = (function(win){
 
 	var Core = {},
 		config = {
-			debug             : false,
-			moduleStartMethod : "start",
-			moduleStopMethod  : "stop"
+			debug              : false,
+			moduleStartMethod  : "start",
+			moduleStopMethod   : "stop",
+			nameSpaceDelimiter : "."
 		};
 
 	// PRIVATE
 	// -------
 
 	var define = (function(){
-
-		var nsDelimiter = ".";
-
 		var extend = function( src, des ){
 			for (var key in des) {
 				src[key] = des[key];
 			}
 			return src;
 		};
-
 		var getModuleName = function( ns ){
-			return ns.split(nsDelimiter).pop();
+			return ns.split(config.nameSpaceDelimiter).pop();
 		};
-
 		var getNameSpace = function( ns ){
-			var arr = ns.split(nsDelimiter);
+			var arr = ns.split(config.nameSpaceDelimiter);
 			arr.pop();
-			return factory(arr.join(nsDelimiter));
+			return factory(arr.join(config.nameSpaceDelimiter));
 		};
-
 		var factory = function( ns ){
 			var i = 0,
-				s = ns.split(nsDelimiter),
+				s = ns.split(config.nameSpaceDelimiter),
 				o = this;
 			for (; i < s.length; i++) {
 				o[s[i]] = o[s[i]] || {};
@@ -50,7 +45,6 @@ APP.Core = (function(){
 			}
 			return o;
 		};
-
 		return function( ns, dep, fn ){
 			if (typeof fn === "undefined") {
 				fn = dep;
@@ -68,7 +62,6 @@ APP.Core = (function(){
 					break;
 			}
 		}
-
 	})();
 
 	var handleSubmodules = function( module, start ) {
@@ -79,14 +72,6 @@ APP.Core = (function(){
 					module[prop][method].call();
 				}
 				handleSubmodules(module[prop], start);
-			}
-		}
-	};
-
-	var log = function(){
-		if (config.debug && window.console) {
-			for (var i = arguments.length; i > 0; i--) {
-				console.log(arguments[i - 1]);
 			}
 		}
 	};
@@ -108,6 +93,20 @@ APP.Core = (function(){
 		return config;
 	};
 
+	Core.Log = (function(){
+		var log = {};
+		log.history = [];
+		log.write = function(){
+			if (config.debug && win.console) {
+				for (var i = arguments.length; i > 0; i--) {
+					log.history.push(arguments[i - 1]);
+					console.log(arguments[i - 1]);
+				}
+			}
+		};
+		return log;
+	})();
+
 	Core.start = function( args ){
 		Core.config(args);
 		handleSubmodules(APP);
@@ -120,8 +119,8 @@ APP.Core = (function(){
 	// SETUP
 	// -----
 
-	window.define = define;
-	window.log = log;
+	win.define = define;
+	win.log = Core.Log.write;
 
 	define("APP.start", function(){
 		return Core.start;
@@ -133,4 +132,4 @@ APP.Core = (function(){
 
 	return Core;
 
-})();
+})(window);
