@@ -1,7 +1,7 @@
-// DEFINE
-// ------
+// APP.CORE
+// --------
 
-module("define");
+module("APP.Core");
 
 test("define", function(){
 
@@ -39,11 +39,6 @@ test("define", function(){
 	deepEqual(APP.TestModule.testObject, { "key" : "value" }, "Define object.");
 
 });
-
-// APP.CORE
-// --------
-
-module("APP.Core");
 
 test("config", function(){
 
@@ -120,7 +115,7 @@ test("stop", function(){
 // APP.PUBSUB
 // ----------
 
-module("APP.PUBSUB");
+module("APP.PubSub");
 
 test("on", function(){
 
