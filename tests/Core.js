@@ -1,10 +1,7 @@
-// Enable debugging
-APP.Core.config("debug", true);
-
-// APP.CORE
-// --------
-
 module("APP.Core");
+
+// define
+// ------
 
 test("define", function(){
 
@@ -45,6 +42,9 @@ test("define", function(){
 
 });
 
+// config
+// ------
+
 test("config", function(){
 
 	expect(4);
@@ -55,6 +55,9 @@ test("config", function(){
 	equal(APP.Core.config("key"), "value", "Get config variable.");
 
 });
+
+// start
+// -----
 
 test("start", function(){
 
@@ -87,6 +90,9 @@ test("start", function(){
 
 });
 
+// stop
+// ----
+
 test("stop", function(){
 
 	var moduleVar = false,
@@ -114,51 +120,5 @@ test("stop", function(){
 
 	ok(moduleVar, "Stop modules.");
 	ok(subModuleVar, "Stop submodules.");
-
-});
-
-// APP.PUBSUB
-// ----------
-
-module("APP.PubSub");
-
-test("on", function(){
-
-	var testVar = false;
-
-	APP.PubSub.on("news", function(){ testVar = true; });
-	APP.PubSub.trigger("news");
-
-	expect(1);
-
-	ok(testVar, "Subscribe to channel.");
-
-});
-
-test("trigger", function(){
-
-	var testVar = false;
-
-	APP.PubSub.on("news", function(str){
-		testVar = str;
-	});
-
-	APP.PubSub.trigger("news", "value");
-
-	equal(testVar, "value", "Trigger channel.");
-
-});
-
-test("off", function(){
-
-	var testVar = false;
-
-	APP.PubSub.on("news", function(){ testVar = true; });
-	APP.PubSub.off("news");
-	APP.PubSub.trigger("news");
-
-	expect(1);
-
-	equal(testVar, false, "Unsubscribe from channel.");
 
 });
