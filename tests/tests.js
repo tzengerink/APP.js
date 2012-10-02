@@ -37,7 +37,7 @@ test("define", function(){
 
 });
 
-// APP.Core
+// APP.CORE
 // --------
 
 module("APP.Core");
