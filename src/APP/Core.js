@@ -75,9 +75,7 @@ define("APP.Core", function(){
 		return Core.stop;
 	});
 
-	window.log = function(){
-		return APP.Core.log(arguments);
-	}
+	window.log = Core.log;
 
 	return Core;
 
