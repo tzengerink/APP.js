@@ -13,8 +13,7 @@ define("APP.Core", function(){
 			debug             : false,
 			moduleStartMethod : "start",
 			moduleStopMethod  : "stop"
-		},
-		logHistory = [];
+		};
 
 	// PRIVATE
 	// -------
@@ -49,7 +48,6 @@ define("APP.Core", function(){
 	};
 
 	Core.log = function(){
-		logHistory.push(arguments);
 		if (config.debug && window.console) {
 			for (var i = arguments.length; i > 0; i--) {
 				console.log(arguments[i - 1]);
@@ -69,13 +67,17 @@ define("APP.Core", function(){
 	// SETUP
 	// -----
 
-	window.log = function(){
-		return APP.Core.log(arguments);
-	}
-
 	define("APP.start", function(){
 		return Core.start;
 	});
+
+	define("APP.stop", function(){
+		return Core.stop;
+	});
+
+	window.log = function(){
+		return APP.Core.log(arguments);
+	}
 
 	return Core;
 
