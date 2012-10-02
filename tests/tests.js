@@ -1,3 +1,6 @@
+// Enable debugging
+APP.Core.config("debug", true);
+
 // APP.CORE
 // --------
 
@@ -5,10 +8,12 @@ module("APP.Core");
 
 test("define", function(){
 
-	define("APP.TestModule", function(){
+	define("APP.TestModule", [window, document], function(win, doc){
 		return {
+			"docObj" : doc,
+			"winObj" : win,
 			"start" : function(){
-				return true;
+				return win.self === window;
 			}
 		};
 	});

@@ -51,10 +51,14 @@ APP.Core = (function(){
 			return o;
 		};
 
-		return function( ns, fn ){
+		return function( ns, dep, fn ){
+			if (typeof fn === "undefined") {
+				fn = dep;
+				dep = [];
+			}
 			var moduleName = getModuleName(ns),
 				nameSpace = getNameSpace(ns),
-			module = (typeof fn === "function") ? fn.call(this, nameSpace, moduleName) : fn;
+				module = (typeof fn === "function") ? fn.apply(this, dep) : fn;
 			switch (typeof module) {
 				case "object":
 					nameSpace[moduleName] = extend((nameSpace[moduleName] || {}), module)
@@ -70,7 +74,7 @@ APP.Core = (function(){
 	var handleSubmodules = function( module, start ) {
 		var method = start !== false ? config.moduleStartMethod : config.moduleStopMethod;
 		for (prop in module) {
-			if (typeof module[prop] === "object") {
+			if (typeof module[prop] === "object" && prop.charAt(0) === prop.charAt(0).toUpperCase()) {
 				if (prop !== "Core" && module[prop].hasOwnProperty(method)) {
 					module[prop][method].call();
 				}
