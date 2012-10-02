@@ -38,7 +38,11 @@ define("APP.Core", function(){
 		if (typeof value !== "undefined") {
 			config[key] = value;
 		}
-		if (typeof config[key] !== "undefined") {
+		if (typeof key === "object") {
+			for (k in key) {
+				config[k] = key[k];
+			}
+		} else if (typeof config[key] !== "undefined") {
 			return config[key];
 		}
 		return config;
@@ -54,9 +58,7 @@ define("APP.Core", function(){
 	};
 
 	Core.start = function( args ){
-		for (k in args) {
-			config[k] = args[k];
-		}
+		Core.config(args);
 		handleSubmodules(APP);
 	};
 

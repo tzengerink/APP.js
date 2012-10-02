@@ -58,7 +58,7 @@ var define = (function(){
 	return function( ns, fn ){
 		var moduleName = getModuleName(ns),
 			nameSpace = getNameSpace(ns),
-			module = fn.call(this, nameSpace, moduleName);
+		module = (typeof fn === "function") ? fn.call(this, nameSpace, moduleName) : fn;
 		switch (typeof module) {
 			case "object":
 				nameSpace[moduleName] = extend((nameSpace[moduleName] || {}), module)
