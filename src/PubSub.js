@@ -53,7 +53,7 @@ define("APP.PubSub", function(){
 		if (typeof topic !== "string") {
 			throw new Error("Topic must be a string");
 		}
-		for (t in subscriptions[topic]) {
+		for (var t in subscriptions[topic]) {
 			subscriptions[topic][t](args);
 		}
 	};

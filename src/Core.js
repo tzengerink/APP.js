@@ -7,7 +7,7 @@
  * See: https://raw.github.com/Mytho/APP.js/master/LISENCE.md
  */
 var APP = APP || {};
-APP.Core = (function(win){
+(function(APP, win){
 
 	var Core = {},
 		config = {
@@ -66,7 +66,7 @@ APP.Core = (function(win){
 
 	var handleSubmodules = function( module, start ) {
 		var method = start !== false ? config.moduleStartMethod : config.moduleStopMethod;
-		for (prop in module) {
+		for (var prop in module) {
 			if (typeof module[prop] === "object" && prop.charAt(0) === prop.charAt(0).toUpperCase()) {
 				if (prop !== "Core" && module[prop].hasOwnProperty(method)) {
 					module[prop][method].call();
@@ -84,7 +84,7 @@ APP.Core = (function(win){
 			config[key] = value;
 		}
 		if (typeof key === "object") {
-			for (k in key) {
+			for (var k in key) {
 				config[k] = key[k];
 			}
 		} else if (typeof config[key] !== "undefined") {
@@ -130,6 +130,6 @@ APP.Core = (function(win){
 		return Core.stop;
 	});
 
-	return Core;
+	APP.Core = Core;
 
-})(window);
+})(APP, window);
