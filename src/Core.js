@@ -27,6 +27,9 @@ var APP = APP || {};
 	// PRIVATE
 	// -------
 
+	// @param  {string}    Namespace
+	// @param  {array}     Dependancies (optional)
+	// @param  {function}  Module
 	var define = (function(){
 		var extend = function( src, des ){
 			for (var key in des) {
@@ -71,6 +74,8 @@ var APP = APP || {};
 		}
 	})();
 
+	// @param  {object}   Module object
+	// @param  {boolean}  Start/stop all submodules (default true)
 	var handleSubmodules = function( module, start ) {
 		var method = start !== false ? config.moduleStartMethod : config.moduleStopMethod;
 		for (var prop in module) {
@@ -86,6 +91,9 @@ var APP = APP || {};
 	// PUBLIC
 	// ------
 
+	// @param   {string}  Key (optional)
+	// @param   {mixed}   Value (optional)
+	// @return  {mixed}   Value for requested key or entire object
 	Core.config = function( key, value ){
 		if (typeof value !== "undefined") {
 			config[key] = value;
