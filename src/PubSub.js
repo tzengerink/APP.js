@@ -26,7 +26,7 @@ define("APP.PubSub", function(){
 	var PubSub = {},
 		subscriptions = {};
 
-	// Unsubscribe
+	// @param  {string}  Topic name
 	PubSub.off = function( topic ){
 		if (typeof topic !== "string") {
 			throw new Error("Topic must be a string");
@@ -34,7 +34,8 @@ define("APP.PubSub", function(){
 		subscriptions[topic] = [];
 	};
 
-	// Subscribe
+	// @param  {string}    Topic name
+	// @param  {function}  Callback
 	PubSub.on = function( topic, fn ){
 		if (typeof topic !== "string") {
 			throw new Error("Topic must be a string");
@@ -48,7 +49,8 @@ define("APP.PubSub", function(){
 		subscriptions[topic].push(fn);
 	};
 
-	// Publish
+	// @param  {string}  Topic name
+	// @param  {mixed}   Arguments to pass to callback
 	PubSub.trigger = function( topic, args ){
 		if (typeof topic !== "string") {
 			throw new Error("Topic must be a string");
