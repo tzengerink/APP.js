@@ -34,21 +34,15 @@ var APP = APP || {};
 		return obj;
 	};
 
-	// @param   {string}  Key (optional)
-	// @param   {mixed}   Value (optional)
-	// @return  {mixed}   Value for requested key or entire object
-	var config = function( key, value ){
-		if (typeof value !== "undefined") {
-			cnf[key] = value;
+	// @param   {mixed}  Key if getting data, object when setting data
+	// @return  {mixed}  Value for requested key or entire object
+	var config = function( data ){
+		if (typeof data === "object") {
+			cnf = extend(cnf, data);
+			return cnf;
+		} else {
+			return cnf[data];
 		}
-		if (typeof key === "object") {
-			for (var k in key) {
-				cnf[k] = key[k];
-			}
-		} else if (typeof cnf[key] !== "undefined") {
-			return cnf[key];
-		}
-		return cnf;
 	};
 
 	// @param   {string}  Namespace

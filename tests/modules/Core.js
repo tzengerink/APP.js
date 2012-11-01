@@ -47,10 +47,9 @@ test("define", function(){
 
 test("config", function(){
 
-	expect(4);
+	expect(3);
 
-	equal(APP.config("test", "string"), "string", "Set config variable.");
-	equal(APP.config("test"), "string", "Get config variable.");
+	equal(typeof (APP.config("nonExistingKey")), "undefined", "Get undefined config key.");
 	equal(typeof APP.config({ "key" : "value" }), "object", "Set config object.");
 	equal(APP.config("key"), "value", "Get config variable.");
 
