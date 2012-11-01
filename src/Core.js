@@ -17,64 +17,58 @@ var APP = APP || {};
 (function(APP, win){
 
 	var Core = {},
-		config = {
+		cnf = {
 			debug              : false,
 			moduleStartMethod  : "start",
 			moduleStopMethod   : "stop",
-			nameSpaceDelimiter : "."
+			namespaceDelimiter : "."
 		};
 
-	// @param  {string}    Namespace
-	// @param  {array}     Dependancies (optional)
-	// @param  {function}  Module
-	var define = (function(){
-		var extend = function( src, des ){
-			for (var key in des) {
-				src[key] = des[key];
-			}
-			return src;
-		};
-		var getModuleName = function( ns ){
-			return ns.split(config.nameSpaceDelimiter).pop();
-		};
-		var getNameSpace = function( ns ){
-			var arr = ns.split(config.nameSpaceDelimiter);
-			arr.pop();
-			return factory(arr.join(config.nameSpaceDelimiter));
-		};
-		var factory = function( ns ){
-			var i = 0,
-				s = ns.split(config.nameSpaceDelimiter),
-				o = this;
-			for (; i < s.length; i++) {
-				o[s[i]] = o[s[i]] || {};
-				o = o[s[i]];
-			}
-			return o;
-		};
-		return function( ns, dep, fn ){
-			if (typeof fn === "undefined") {
-				fn = dep;
-				dep = [];
-			}
-			var moduleName = getModuleName(ns),
-				nameSpace = getNameSpace(ns),
-				module = (typeof fn === "function") ? fn.apply(this, dep) : fn;
-			switch (typeof module) {
-				case "object":
-					nameSpace[moduleName] = extend((nameSpace[moduleName] || {}), module)
-					break;
-				default:
-					nameSpace[moduleName] = module;
-					break;
-			}
+	// @param   {object}  Destination object
+	// @param   {object}  Source object
+	// @return  {object}  Extended object
+	var extend = function( obj, source ) {
+		for (var key in source) {
+			obj[key] = source[key];
 		}
-	})();
+		return obj;
+	};
+
+	// @param   {string}  Key (optional)
+	// @param   {mixed}   Value (optional)
+	// @return  {mixed}   Value for requested key or entire object
+	var config = function( key, value ){
+		if (typeof value !== "undefined") {
+			cnf[key] = value;
+		}
+		if (typeof key === "object") {
+			for (var k in key) {
+				cnf[k] = key[k];
+			}
+		} else if (typeof cnf[key] !== "undefined") {
+			return cnf[key];
+		}
+		return cnf;
+	};
+
+	// @param   {string}  Namespace
+	// @return  {string}  Module name
+	var getModuleName = function( ns ){
+		return ns.split(cnf.namespaceDelimiter).pop();
+	};
+
+	// @param   {string}  Module string
+	// @return  {object}  Namespace
+	var getNameSpace = function( ns ){
+		var arr = ns.split(cnf.namespaceDelimiter);
+		arr.pop();
+		return namespaceFactory(arr.join(cnf.namespaceDelimiter));
+	};
 
 	// @param  {object}   Module object
 	// @param  {boolean}  Start/stop all submodules (default true)
 	var handleSubmodules = function( module, start ) {
-		var method = start !== false ? config.moduleStartMethod : config.moduleStopMethod;
+		var method = start !== false ? cnf.moduleStartMethod : cnf.moduleStopMethod;
 		for (var prop in module) {
 			if (typeof module[prop] === "object" && prop.charAt(0) === prop.charAt(0).toUpperCase()) {
 				if (prop !== "Core" && module[prop].hasOwnProperty(method)) {
@@ -85,25 +79,33 @@ var APP = APP || {};
 		}
 	};
 
+	// @param   {string}  Namespace string
+	// @return  {object}  Namespace
+	var namespaceFactory = function( ns ){
+		var i = 0,
+			s = ns.split(cnf.namespaceDelimiter),
+			o = this;
+		for (; i < s.length; i++) {
+			o[s[i]] = o[s[i]] || {};
+			o = o[s[i]];
+		}
+		return o;
+	};
+
+	// Start all submodules, passing the given arguments to the
+	// configuration method.
+	var start = function(){
+		config(arguments);
+		handleSubmodules(APP);
+	};
+
+	// Stop all submodules by calling their stop method.
+	var stop = function(){
+		handleSubmodules(APP, false);
+	};
+
 	// PUBLIC
 	// ------
-
-	// @param   {string}  Key (optional)
-	// @param   {mixed}   Value (optional)
-	// @return  {mixed}   Value for requested key or entire object
-	Core.config = function( key, value ){
-		if (typeof value !== "undefined") {
-			config[key] = value;
-		}
-		if (typeof key === "object") {
-			for (var k in key) {
-				config[k] = key[k];
-			}
-		} else if (typeof config[key] !== "undefined") {
-			return config[key];
-		}
-		return config;
-	};
 
 	// Log application variables. It will store the variables in an history array,
 	// if in debug mode the variables will be passed to the console (if possible).
@@ -113,38 +115,54 @@ var APP = APP || {};
 		log.write = function(){
 			for (var i = arguments.length; i > 0; i--) {
 				log.history.push(arguments[i - 1]);
-				if (config.debug && win.console) {
+				if (cnf.debug && win.console) {
 					console.log(arguments[i - 1]);
 				}
 			}
 		};
+
 		return log;
 	})();
 
-	// Start or stop all submodules, passing the given arguments to the
-	// configuration method.
-	Core.start = function(){
-		Core.config(arguments);
-		handleSubmodules(APP);
-	};
+	// Utilities for core and common operations.
+	Core.Utils = (function(){
+		var utils = {};
+		utils.extend = extend;
+		return utils;
+	})();
 
-	Core.stop = function(){
-		handleSubmodules(APP, false);
-	};
+	// @param  {string}    Namespace
+	// @param  {array}     Dependancies (optional)
+	// @param  {function}  Module
+	Core.define = (function(){
+		return function( ns, dep, fn ){
+			if (typeof fn === "undefined") {
+				fn = dep;
+				dep = [];
+			}
+			var moduleName = getModuleName(ns),
+				namespace = getNameSpace(ns),
+				module = (typeof fn === "function") ? fn.apply(this, dep) : fn;
+			switch (typeof module) {
+				case "object":
+					namespace[moduleName] = extend((namespace[moduleName] || {}), module)
+					break;
+				default:
+					namespace[moduleName] = module;
+					break;
+			}
+		}
+	})();
 
 	// SETUP
 	// -----
 
-	win.define = define;
+	win.define = Core.define;
 	win.log = Core.Log.write;
 
-	define("APP.start", function(){
-		return Core.start;
-	});
-
-	define("APP.stop", function(){
-		return Core.stop;
-	});
+	APP.config = config;
+	APP.start = start;
+	APP.stop = stop;
 
 	APP.Core = Core;
 

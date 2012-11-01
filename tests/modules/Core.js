@@ -49,10 +49,10 @@ test("config", function(){
 
 	expect(4);
 
-	equal(APP.Core.config("test", "string"), "string", "Set config variable.");
-	equal(APP.Core.config("test"), "string", "Get config variable.");
-	equal(typeof APP.Core.config({ "key" : "value" }), "object", "Set config object.");
-	equal(APP.Core.config("key"), "value", "Get config variable.");
+	equal(APP.config("test", "string"), "string", "Set config variable.");
+	equal(APP.config("test"), "string", "Get config variable.");
+	equal(typeof APP.config({ "key" : "value" }), "object", "Set config object.");
+	equal(APP.config("key"), "value", "Get config variable.");
 
 });
 
@@ -100,7 +100,7 @@ test("start", function(){
 
 	ok(moduleVar, "Start modules.");
 	ok(subModuleVar, "Start submodules.");
-	equal(APP.Core.config("key"), "value", "Set configuration.");
+	equal(APP.config("key"), "value", "Set configuration.");
 
 });
 
