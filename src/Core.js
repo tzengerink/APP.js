@@ -4,6 +4,8 @@
  * Copyright (c) 2012, T. Zengerink
  * https://raw.github.com/Mytho/APP.js/master/LISENCE.md
  */
+var APP = APP || {};
+
 /* CORE
  * ----
  * Core utilities for the application.
@@ -12,7 +14,6 @@
  * Licensed under MIT License.
  * See: https://raw.github.com/Mytho/APP.js/master/LISENCE.md
  */
-var APP = APP || {};
 (function(APP, win){
 
 	var Core = {},
