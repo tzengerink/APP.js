@@ -24,9 +24,6 @@ var APP = APP || {};
 			nameSpaceDelimiter : "."
 		};
 
-	// PRIVATE
-	// -------
-
 	// @param  {string}    Namespace
 	// @param  {array}     Dependancies (optional)
 	// @param  {function}  Module
@@ -108,6 +105,8 @@ var APP = APP || {};
 		return config;
 	};
 
+	// Log application variables. It will store the variables in an history array,
+	// if in debug mode the variables will be passed to the console (if possible).
 	Core.Log = (function(){
 		var log = {};
 		log.history = [];
@@ -122,8 +121,10 @@ var APP = APP || {};
 		return log;
 	})();
 
-	Core.start = function( args ){
-		Core.config(args);
+	// Start or stop all submodules, passing the given arguments to the
+	// configuration method.
+	Core.start = function(){
+		Core.config(arguments);
 		handleSubmodules(APP);
 	};
 
