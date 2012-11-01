@@ -37,7 +37,9 @@ var APP = APP || {};
 	// @param   {mixed}  Key if getting data, object when setting data
 	// @return  {mixed}  Value for requested key or entire object
 	var config = function( data ){
-		if (typeof data === "object") {
+		if (typeof data === "undefined") {
+			return cnf;
+		} else if (typeof data === "object") {
 			cnf = extend(cnf, data);
 			return cnf;
 		} else {
@@ -88,8 +90,8 @@ var APP = APP || {};
 
 	// Start all submodules, passing the given arguments to the
 	// configuration method.
-	var start = function(){
-		config(arguments);
+	var start = function( cnf ){
+		config(cnf);
 		handleSubmodules(APP);
 	};
 
