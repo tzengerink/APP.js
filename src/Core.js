@@ -1,3 +1,9 @@
+/*!
+ * APP.js
+ * ------
+ * Copyright (c) 2012, T. Zengerink
+ * https://raw.github.com/Mytho/APP.js/master/LISENCE.md
+ */
 /* CORE
  * ----
  * Core utilities for the application.
@@ -97,9 +103,9 @@ var APP = APP || {};
 		var log = {};
 		log.history = [];
 		log.write = function(){
-			if (config.debug && win.console) {
-				for (var i = arguments.length; i > 0; i--) {
-					log.history.push(arguments[i - 1]);
+			for (var i = arguments.length; i > 0; i--) {
+				log.history.push(arguments[i - 1]);
+				if (config.debug && win.console) {
 					console.log(arguments[i - 1]);
 				}
 			}

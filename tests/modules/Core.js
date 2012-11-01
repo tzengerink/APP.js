@@ -56,6 +56,20 @@ test("config", function(){
 
 });
 
+// Log
+// ---
+
+test("Log", function(){
+
+	log("test1");
+	log("test2");
+
+	expect(1);
+
+	deepEqual(APP.Core.Log.history, ["test1", "test2"], "Append log history.");
+
+});
+
 // start
 // -----
 
