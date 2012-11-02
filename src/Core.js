@@ -18,6 +18,7 @@ var APP = APP || {};
 
 	var Core = {},
 		cnf = {
+			baseUri            : "",
 			debug              : false,
 			moduleStartMethod  : "start",
 			moduleStopMethod   : "stop",
@@ -33,6 +34,21 @@ var APP = APP || {};
 		}
 		return obj;
 	};
+
+	// Assist in URL manipulation. The utility uses the `baseUri` config element
+	// to determine the full site URL.
+	var Url = (function(){
+		var url = {},
+			host = win.location.host,
+			protocol = win.location.protocol;
+		url.base = function(){
+			return protocol + "//" + host + "/"+ (cnf.baseUri && cnf.baseUri + "/");
+		};
+		url.site = function( uri ){
+			return url.base() + uri.replace(/^\/+/, "").replace(/\/+$/, "") + "/";
+		};
+		return url;
+	})();
 
 	// @param   {mixed}  Key if getting data, object when setting data
 	// @return  {mixed}  Value for requested key or entire object
@@ -88,8 +104,8 @@ var APP = APP || {};
 		return o;
 	};
 
-	// Start all submodules, passing the given arguments to the
-	// configuration method.
+	// Start application and all submodules.
+	// @param  {object}  Application configuration
 	var start = function( obj ){
 		config(obj);
 		handleSubmodules(APP);
@@ -103,29 +119,10 @@ var APP = APP || {};
 	// PUBLIC
 	// ------
 
-	// Log application variables. It will store the variables in an history array,
-	// if in debug mode the variables will be passed to the console (if possible).
-	Core.Log = (function(){
-		var log = {};
-		log.history = [];
-		log.write = function(){
-			for (var i = arguments.length; i > 0; i--) {
-				log.history.push(arguments[i - 1]);
-				if (cnf.debug && win.console) {
-					console.log(arguments[i - 1]);
-				}
-			}
-		};
-
-		return log;
-	})();
-
-	// Utilities for core and common operations.
-	Core.Utils = (function(){
-		var utils = {};
-		utils.extend = extend;
-		return utils;
-	})();
+	// Make some of the utilities publicly available for other modules to use.
+	Core.config = config;
+	Core.extend = extend;
+	Core.Url = Url;
 
 	// @param  {string}    Namespace
 	// @param  {array}     Dependancies (optional)
@@ -150,13 +147,29 @@ var APP = APP || {};
 		}
 	})();
 
+	// Log application variables. It will store the variables in an history array,
+	// if in debug mode the variables will be passed to the console (if possible).
+	Core.Log = (function(){
+		var log = {};
+		log.history = [];
+		log.write = function(){
+			for (var i = arguments.length; i > 0; i--) {
+				log.history.push(arguments[i - 1]);
+				if (cnf.debug && win.console) {
+					console.log(arguments[i - 1]);
+				}
+			}
+		};
+
+		return log;
+	})();
+
 	// SETUP
 	// -----
 
 	win.define = Core.define;
 	win.log = Core.Log.write;
 
-	APP.config = config;
 	APP.start = start;
 	APP.stop = stop;
 

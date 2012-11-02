@@ -49,10 +49,10 @@ test("config", function(){
 
 	expect(4);
 
-	equal(typeof APP.config(), "object", "Get configuration object");
-	equal(typeof APP.config("nonExistingKey"), "undefined", "Get undefined config key.");
-	equal(typeof APP.config({ "key" : "value" }), "object", "Set config object.");
-	equal(APP.config("key"), "value", "Get config variable.");
+	equal(typeof APP.Core.config(), "object", "Get configuration object");
+	equal(typeof APP.Core.config("nonExistingKey"), "undefined", "Get undefined config key.");
+	equal(typeof APP.Core.config({ "key" : "value" }), "object", "Set config object.");
+	equal(APP.Core.config("key"), "value", "Get config variable.");
 
 });
 
@@ -67,6 +67,26 @@ test("Log", function(){
 	expect(1);
 
 	deepEqual(APP.Core.Log.history, ["test1", "test2"], "Append log history.");
+
+});
+
+// URL
+// ---
+
+test("Url", function(){
+
+	var testUri = "some/long/uri",
+		protocol = window.location.protocol;
+		host = window.location.host,
+		base = protocol + "//" + host + "/" + testUri + "/";
+
+	APP.Core.config({ baseUri:testUri });
+
+	expect(3);
+
+	equal(APP.Core.Url.base(), base);
+	equal(APP.Core.Url.site("/test/"), base + "test/");
+	equal(APP.Core.Url.site("test"), base + "test/");
 
 });
 
@@ -100,7 +120,7 @@ test("start", function(){
 
 	ok(moduleVar, "Start modules.");
 	ok(subModuleVar, "Start submodules.");
-	equal(APP.config("key"), "value", "Set configuration.");
+	equal(APP.Core.config("key"), "value", "Set configuration.");
 
 });
 
