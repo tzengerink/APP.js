@@ -90,8 +90,8 @@ var APP = APP || {};
 
 	// Start all submodules, passing the given arguments to the
 	// configuration method.
-	var start = function( cnf ){
-		config(cnf);
+	var start = function( obj ){
+		config(obj);
 		handleSubmodules(APP);
 	};
 
