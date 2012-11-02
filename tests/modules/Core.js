@@ -84,9 +84,9 @@ test("Url", function(){
 
 	expect(3);
 
-	equal(APP.Core.Url.base(), base);
-	equal(APP.Core.Url.site("/test/"), base + "test/");
-	equal(APP.Core.Url.site("test"), base + "test/");
+	equal(APP.Core.Url.base(), base, "Get base URL");
+	equal(APP.Core.Url.site("/test/"), base + "test/", "Strip slashes from provided URI");
+	equal(APP.Core.Url.site("test"), base + "test/", "Strip slashes from provided URI");
 
 });
 
