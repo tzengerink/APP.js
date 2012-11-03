@@ -42,10 +42,10 @@ var APP = APP || {};
 			host = win.location.host,
 			protocol = win.location.protocol;
 		url.base = function(){
-			return protocol + "//" + host + "/"+ (cnf.baseUri && cnf.baseUri + "/");
+			return protocol + "//" + host + (cnf.baseUri && "/" + cnf.baseUri);
 		};
 		url.site = function( uri ){
-			return url.base() + uri.replace(/^\/+/, "").replace(/\/+$/, "") + "/";
+			return url.base() + "/" + uri.replace(/^\/+/, "").replace(/\/+$/, "");
 		};
 		return url;
 	})();

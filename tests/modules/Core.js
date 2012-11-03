@@ -78,15 +78,15 @@ test("Url", function(){
 	var testUri = "some/long/uri",
 		protocol = window.location.protocol;
 		host = window.location.host,
-		base = protocol + "//" + host + "/" + testUri + "/";
+		base = protocol + "//" + host + "/" + testUri;
 
 	APP.Core.config({ baseUri:testUri });
 
 	expect(3);
 
 	equal(APP.Core.Url.base(), base, "Get base URL");
-	equal(APP.Core.Url.site("/test/"), base + "test/", "Strip slashes from provided URI");
-	equal(APP.Core.Url.site("test"), base + "test/", "Strip slashes from provided URI");
+	equal(APP.Core.Url.site("/test/"), base + "/test", "Strip slashes from provided URI");
+	equal(APP.Core.Url.site("test"), base + "/test", "Strip slashes from provided URI");
 
 });
 
