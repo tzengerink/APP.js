@@ -76,7 +76,7 @@ test("Log", function(){
 test("Url", function(){
 
 	var testUri = "some/long/uri",
-		protocol = window.location.protocol;
+		protocol = window.location.protocol,
 		host = window.location.host,
 		base = protocol + "//" + host + "/" + testUri;
 
