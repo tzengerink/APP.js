@@ -53,14 +53,12 @@ var APP = APP || {};
 	// @param   {mixed}  Key if getting data, object when setting data
 	// @return  {mixed}  Value for requested key or entire object
 	var config = function( data ){
-		if (typeof data === "undefined") {
-			return cnf;
-		} else if (typeof data === "object") {
-			cnf = extend(cnf, data);
-			return cnf;
-		} else {
+		if (typeof data === "string") {
 			return cnf[data];
+		} else if (typeof data === "object") {
+			return extend(cnf, data);
 		}
+		return cnf;
 	};
 
 	// @param   {string}  Namespace

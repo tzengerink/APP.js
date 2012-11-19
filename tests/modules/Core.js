@@ -70,7 +70,7 @@ test("Log", function(){
 
 });
 
-// URL
+// Url
 // ---
 
 test("Url", function(){
