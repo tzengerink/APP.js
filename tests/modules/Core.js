@@ -75,16 +75,18 @@ test("Log", function(){
 
 test("Url", function(){
 
-	var testUri = "some/long/uri",
+	var testUriOne = "some/long/uri",
+		testUriTwo = "/some/long/uri/",
 		protocol = window.location.protocol,
 		host = window.location.host,
-		base = protocol + "//" + host + "/" + testUri;
-
-	APP.Core.config({ baseUri:testUri });
+		base = protocol + "//" + host + "/" + testUriOne;
 
 	expect(3);
 
+	APP.Core.config({ baseUri:testUriOne });
 	equal(APP.Core.Url.base(), base, "Get base URL");
+
+	APP.Core.config({ baseUri:testUriTwo });
 	equal(APP.Core.Url.site("/test/"), base + "/test", "Strip slashes from provided URI");
 	equal(APP.Core.Url.site("test"), base + "/test", "Strip slashes from provided URI");
 
