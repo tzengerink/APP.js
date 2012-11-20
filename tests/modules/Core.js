@@ -10,7 +10,7 @@ test("define", function(){
 			"docObj" : doc,
 			"winObj" : win,
 			"start" : function(){
-				return win.self === window;
+				return win.location.href === window.location.href;
 			}
 		};
 	});
@@ -49,7 +49,7 @@ test("config", function(){
 
 	expect(4);
 
-	equal(typeof APP.Core.config(), "object", "Get configuration object");
+	equal(typeof APP.Core.config(), "object", "Get configuration object.");
 	equal(typeof APP.Core.config("nonExistingKey"), "undefined", "Get undefined config key.");
 	equal(typeof APP.Core.config({ "key" : "value" }), "object", "Set config object.");
 	equal(APP.Core.config("key"), "value", "Get config variable.");
@@ -84,11 +84,11 @@ test("Url", function(){
 	expect(3);
 
 	APP.Core.config({ baseUri:testUriOne });
-	equal(APP.Core.Url.base(), base, "Get base URL");
+	equal(APP.Core.Url.base(), base, "Get base URL.");
 
 	APP.Core.config({ baseUri:testUriTwo });
-	equal(APP.Core.Url.site("/test/"), base + "/test", "Strip slashes from provided URI");
-	equal(APP.Core.Url.site("test"), base + "/test", "Strip slashes from provided URI");
+	equal(APP.Core.Url.site("/test/"), base + "/test", "Strip slashes from provided URI.");
+	equal(APP.Core.Url.site("test"), base + "/test", "Strip slashes from provided URI.");
 
 });
 
