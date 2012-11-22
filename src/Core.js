@@ -122,9 +122,19 @@ var APP = APP || {};
 		handleSubmodules(APP, false);
 	};
 
+	// PUBLIC
+	// ------
+
+	Core.config = config;
+	Core.extend = extend;
+
+	APP.module = module;
+	APP.start = start;
+	APP.stop = stop;
+
 	// Assist in URL manipulation. The utility uses the `baseUri` config element
 	// to determine the full site URL.
-	var Url = (function(){
+	Core.Url = (function(){
 		var url = {},
 			host = win.location.host,
 			protocol = win.location.protocol;
@@ -136,14 +146,6 @@ var APP = APP || {};
 		};
 		return url;
 	})();
-
-	// PUBLIC
-	// ------
-
-	// Make some of the utilities publicly available for other modules to use.
-	Core.config = config;
-	Core.extend = extend;
-	Core.Url = Url;
 
 	// Log application variables. It will store the variables in an history array,
 	// if in debug mode the variables will be passed to the console (if possible).
@@ -162,15 +164,7 @@ var APP = APP || {};
 		return log;
 	})();
 
-	// SETUP
-	// -----
-
-	win.log = Core.Log.write;
-
-	APP.module = module;
-	APP.start = start;
-	APP.stop = stop;
-
 	APP.Core = Core;
+	win.log = Core.Log.write;
 
 })(APP, window);
