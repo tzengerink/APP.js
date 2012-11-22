@@ -156,7 +156,6 @@ var APP = APP || {};
 				}
 			}
 		};
-
 		return log;
 	})();
 
