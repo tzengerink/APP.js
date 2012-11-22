@@ -35,21 +35,6 @@ var APP = APP || {};
 		return obj;
 	};
 
-	// Assist in URL manipulation. The utility uses the `baseUri` config element
-	// to determine the full site URL.
-	var Url = (function(){
-		var url = {},
-			host = win.location.host,
-			protocol = win.location.protocol;
-		url.base = function(){
-			return protocol + "//" + host + (cnf.baseUri.replace(/^\/|\/$/g, "") && "/" + cnf.baseUri.replace(/^\/|\/$/g, ""));
-		};
-		url.site = function( uri ){
-			return url.base() + "/" + uri.replace(/^\/|\/$/g, "");
-		};
-		return url;
-	})();
-
 	// @param   {mixed}  Key if getting data, object when setting data
 	// @return  {mixed}  Value for requested key or entire object
 	var config = function( data ){
@@ -102,30 +87,10 @@ var APP = APP || {};
 		return o;
 	};
 
-	// Start application and all submodules.
-	// @param  {object}  Application configuration
-	var start = function( obj ){
-		config(obj);
-		handleSubmodules(APP);
-	};
-
-	// Stop all submodules by calling their stop method.
-	var stop = function(){
-		handleSubmodules(APP, false);
-	};
-
-	// PUBLIC
-	// ------
-
-	// Make some of the utilities publicly available for other modules to use.
-	Core.config = config;
-	Core.extend = extend;
-	Core.Url = Url;
-
 	// @param  {string}    Namespace
 	// @param  {array}     Dependancies (optional)
 	// @param  {function}  Module
-	Core.define = (function(){
+	var module = (function(){
 		return function( ns, dep, fn ){
 			if (typeof fn === "undefined") {
 				fn = dep;
@@ -144,6 +109,41 @@ var APP = APP || {};
 			}
 		}
 	})();
+
+	// Start application and all submodules.
+	// @param  {object}  Application configuration
+	var start = function( obj ){
+		config(obj);
+		handleSubmodules(APP);
+	};
+
+	// Stop all submodules by calling their stop method.
+	var stop = function(){
+		handleSubmodules(APP, false);
+	};
+
+	// Assist in URL manipulation. The utility uses the `baseUri` config element
+	// to determine the full site URL.
+	var Url = (function(){
+		var url = {},
+			host = win.location.host,
+			protocol = win.location.protocol;
+		url.base = function(){
+			return protocol + "//" + host + (cnf.baseUri.replace(/^\/|\/$/g, "") && "/" + cnf.baseUri.replace(/^\/|\/$/g, ""));
+		};
+		url.site = function( uri ){
+			return url.base() + "/" + uri.replace(/^\/|\/$/g, "");
+		};
+		return url;
+	})();
+
+	// PUBLIC
+	// ------
+
+	// Make some of the utilities publicly available for other modules to use.
+	Core.config = config;
+	Core.extend = extend;
+	Core.Url = Url;
 
 	// Log application variables. It will store the variables in an history array,
 	// if in debug mode the variables will be passed to the console (if possible).
@@ -165,9 +165,9 @@ var APP = APP || {};
 	// SETUP
 	// -----
 
-	win.define = Core.define;
 	win.log = Core.Log.write;
 
+	APP.module = module;
 	APP.start = start;
 	APP.stop = stop;
 

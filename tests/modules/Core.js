@@ -1,11 +1,11 @@
 module("APP.Core");
 
-// define
+// module
 // ------
 
-test("define", function(){
+test("module", function(){
 
-	define("APP.TestModule", [window, document], function(win, doc){
+	APP.module("APP.TestModule", [window, document], function(win, doc){
 		return {
 			"docObj" : doc,
 			"winObj" : win,
@@ -15,7 +15,7 @@ test("define", function(){
 		};
 	});
 
-	define("APP.TestModule.SubModule", function(){
+	APP.module("APP.TestModule.SubModule", function(){
 		return {
 			"start" : function(){
 				return true;
@@ -23,14 +23,14 @@ test("define", function(){
 		};
 	});
 
-	define("APP.TestModule.testMethod", function(){
+	APP.module("APP.TestModule.testMethod", function(){
 		return function(str){
 			return str == "test";
 		};
 	});
 
-	define("APP.TestModule.testVar", 1234);
-	define("APP.TestModule.testObject", { "key" : "value" });
+	APP.module("APP.TestModule.testVar", 1234);
+	APP.module("APP.TestModule.testObject", { "key" : "value" });
 
 	expect(5);
 
@@ -100,7 +100,7 @@ test("start", function(){
 	var moduleVar = false,
 		subModuleVar = false;
 
-	define("APP.Mod", function(){
+	APP.module("APP.Mod", function(){
 		return {
 			start : function(){
 				moduleVar = true;
@@ -108,7 +108,7 @@ test("start", function(){
 		}
 	});
 
-	define("APP.Mod.Sub", function(){
+	APP.module("APP.Mod.Sub", function(){
 		return {
 			start : function(){
 				subModuleVar = true;
@@ -134,7 +134,7 @@ test("stop", function(){
 	var moduleVar = false,
 		subModuleVar = false;
 
-	define("APP.Mod", function(){
+	APP.module("APP.Mod", function(){
 		return {
 			stop : function(){
 				moduleVar = true;
@@ -142,7 +142,7 @@ test("stop", function(){
 		}
 	});
 
-	define("APP.Mod.Sub", function(){
+	APP.module("APP.Mod.Sub", function(){
 		return {
 			stop : function(){
 				subModuleVar = true;

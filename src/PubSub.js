@@ -21,7 +21,7 @@
  * Licensed under MIT License.
  * See: https://raw.github.com/Mytho/APP.js/master/LISENCE.md
  */
-define("APP.PubSub", function(){
+APP.module("APP.PubSub", function(){
 
 	var PubSub = {},
 		subscriptions = {};
