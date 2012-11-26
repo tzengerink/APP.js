@@ -23,10 +23,7 @@ test("trigger", function(){
 
 	var testVar = false;
 
-	APP.PubSub.on("news", function(str){
-		testVar = str;
-	});
-
+	APP.PubSub.on("news", function(str){ testVar = str; });
 	APP.PubSub.trigger("news", "value");
 
 	equal(testVar, "value", "Trigger channel.");
