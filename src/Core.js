@@ -122,12 +122,6 @@ var APP = APP || {};
 		handleSubmodules(APP, false);
 	};
 
-	// PUBLIC
-	// ------
-
-	Core.config = config;
-	Core.extend = extend;
-
 	// Assist in URL manipulation. The utility uses the `baseUri` config element
 	// to determine the full site URL.
 	Core.Url = (function(){
@@ -158,6 +152,9 @@ var APP = APP || {};
 		};
 		return log;
 	})();
+
+	Core.config = config;
+	Core.extend = extend;
 
 	APP.module = module;
 	APP.start = start;
