@@ -122,7 +122,8 @@ var APP = APP || {};
 		handleSubmodules(APP, false);
 	};
 
-	// Object that assists in handling events and binding listeners
+	// Assist in binding event listeners. Bind event listeners in a cross browser
+	// compatible way.
 	Core.Events = (function(){
 		var Events = {};
 		Events.addListener = function( el, e, fn ){
@@ -176,7 +177,8 @@ var APP = APP || {};
 	Core.config = config;
 	Core.extend = extend;
 
-	// Execute functions when DOM is ready loading all elements
+	// Execute functions when DOM is ready loading all elements. Please be aware
+	// when using iframes which are not supported.
 	APP.ready = (function(){
 		var fns = [],
 			fn,
