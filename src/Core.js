@@ -25,6 +25,27 @@ var APP = APP || {};
 			namespaceDelimiter : "."
 		};
 
+	// Assist in binding event listeners. Bind event listeners in a cross browser
+	// compatible way.
+	var Events = (function(){
+		var Events = {};
+		Events.addListener = function( el, e, fn ){
+			if (el.addEventListener) {
+				el.addEventListener(e, fn, false);
+			} else if (el.attachEvent) {
+				el.attachEvent("on" + e, fn);
+			}
+		};
+		Events.removeListener = function( el, e, fn ){
+			if (el.removeEventListener) {
+				el.removeEventListener(e, fn, false);
+			} else if (el.detachEvent) {
+				el.detachEvent("on" + e, fn);
+			}
+		};
+		return Events;
+	})();
+
 	// @param   {object}  Destination object
 	// @param   {object}  Source object
 	// @return  {object}  Extended object
@@ -110,38 +131,50 @@ var APP = APP || {};
 		}
 	})();
 
+	// Execute functions when DOM is ready loading all elements. Please be aware
+	// when using iframes which are not supported.
+	var ready = (function(){
+		var fns = [],
+			fn,
+			docEl = doc.documentElement,
+			ready = false;
+		var flush = function(){
+			ready = true;
+			while (f = fns.shift()) f();
+		};
+		if (docEl.doScroll) {
+			var check = function(){
+				try {
+					docEl.doScroll("left");
+					flush();
+				} catch(e) {
+					setTimeout(check, 10);
+				}
+			};
+			check();
+		}
+		Events.addListener(doc, "DOMContentLoaded", fn = function(){
+			Events.removeListener(doc, "DOMContentLoaded", fn);
+			flush();
+		});
+		return function( fn ){
+			ready ? fn() : fns.push(fn);
+		};
+	})();
+
 	// Start application and all submodules.
 	// @param  {object}  Application configuration
 	var start = function( obj ){
 		config(obj);
-		handleSubmodules(APP);
+		ready(function(){
+			handleSubmodules(APP);
+		});
 	};
 
 	// Stop all submodules by calling their stop method.
 	var stop = function(){
 		handleSubmodules(APP, false);
 	};
-
-	// Assist in binding event listeners. Bind event listeners in a cross browser
-	// compatible way.
-	Core.Events = (function(){
-		var Events = {};
-		Events.addListener = function( el, e, fn ){
-			if (el.addEventListener) {
-				el.addEventListener(e, fn, false);
-			} else if (el.attachEvent) {
-				el.attachEvent("on" + e, fn);
-			}
-		};
-		Events.removeListener = function( el, e, fn ){
-			if (el.removeEventListener) {
-				el.removeEventListener(e, fn, false);
-			} else if (el.detachEvent) {
-				el.detachEvent("on" + e, fn);
-			}
-		};
-		return Events;
-	})();
 
 	// Log application variables. It will store the variables in an history array,
 	// if in debug mode the variables will be passed to the console (if possible).
@@ -176,39 +209,10 @@ var APP = APP || {};
 
 	Core.config = config;
 	Core.extend = extend;
-
-	// Execute functions when DOM is ready loading all elements. Please be aware
-	// when using iframes which are not supported.
-	APP.ready = (function(){
-		var fns = [],
-			fn,
-			docEl = doc.documentElement,
-			ready = false;
-		var flush = function(){
-			ready = true;
-			while (f = fns.shift()) f();
-		};
-		if (docEl.doScroll) {
-			var check = function(){
-				try {
-					docEl.doScroll("left");
-					flush();
-				} catch(e) {
-					setTimeout(check, 10);
-				}
-			};
-			check();
-		}
-		Core.Events.addListener(doc, "DOMContentLoaded", fn = function(){
-			Core.Events.removeListener(doc, "DOMContentLoaded", fn);
-			flush();
-		});
-		return function( fn ){
-			ready ? fn() : fns.push(fn);
-		};
-	})();
+	Core.Events = Events;
 
 	APP.module = module;
+	APP.ready = ready;
 	APP.start = start;
 	APP.stop = stop;
 	APP.Core = Core;

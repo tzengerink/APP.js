@@ -1,7 +1,7 @@
 module("APP.Core");
 
 test("ready", function(){
-	var testvar1 = false;
+	var testVar1 = false;
 	APP.ready(function(){ testVar1 = true; });
 	expect(1);
 	ok(testVar1, "DOM Ready.");
