@@ -14,7 +14,7 @@ var APP = APP || {};
  * Licensed under MIT License.
  * See: https://raw.github.com/Mytho/APP.js/master/LISENCE.md
  */
-(function(APP, win){
+(function(APP, win, doc){
 
 	var Core = {},
 		cnf = {
@@ -122,39 +122,89 @@ var APP = APP || {};
 		handleSubmodules(APP, false);
 	};
 
-	// Assist in URL manipulation. The utility uses the `baseUri` config element
-	// to determine the full site URL.
-	Core.Url = (function(){
-		var url = {},
-			host = win.location.host,
-			protocol = win.location.protocol;
-		url.base = function(){
-			return protocol + "//" + host + (cnf.baseUri.replace(/^\/|\/$/g, "") && "/" + cnf.baseUri.replace(/^\/|\/$/g, ""));
+	// Object that assists in handling events and binding listeners
+	Core.Events = (function(){
+		var Events = {};
+		Events.addListener = function( el, e, fn ){
+			if (el.addEventListener) {
+				el.addEventListener(e, fn, false);
+			} else if (el.attachEvent) {
+				el.attachEvent("on" + e, fn);
+			}
 		};
-		url.site = function( uri ){
-			return url.base() + "/" + uri.replace(/^\/|\/$/g, "");
+		Events.removeListener = function( el, e, fn ){
+			if (el.removeEventListener) {
+				el.removeEventListener(e, fn, false);
+			} else if (el.detachEvent) {
+				el.detachEvent("on" + e, fn);
+			}
 		};
-		return url;
+		return Events;
 	})();
 
 	// Log application variables. It will store the variables in an history array,
 	// if in debug mode the variables will be passed to the console (if possible).
 	Core.Log = (function(){
-		var log = {};
-		log.history = [];
-		log.write = function(){
+		var Log = {};
+		Log.history = [];
+		Log.write = function(){
 			for (var i = arguments.length; i > 0; i--) {
-				log.history.push(arguments[i - 1]);
+				Log.history.push(arguments[i - 1]);
 				if (cnf.debug && win.console) {
 					console.log(arguments[i - 1]);
 				}
 			}
 		};
-		return log;
+		return Log;
+	})();
+
+	// Assist in URL manipulation. The utility uses the `baseUri` config element
+	// to determine the full site URL.
+	Core.Url = (function(){
+		var Url = {},
+			host = win.location.host,
+			protocol = win.location.protocol;
+		Url.base = function(){
+			return protocol + "//" + host + (cnf.baseUri.replace(/^\/|\/$/g, "") && "/" + cnf.baseUri.replace(/^\/|\/$/g, ""));
+		};
+		Url.site = function( uri ){
+			return Url.base() + "/" + uri.replace(/^\/|\/$/g, "");
+		};
+		return Url;
 	})();
 
 	Core.config = config;
 	Core.extend = extend;
+
+	// Execute functions when DOM is ready loading all elements
+	APP.ready = (function(){
+		var fns = [],
+			fn,
+			docEl = doc.documentElement,
+			ready = false;
+		var flush = function(){
+			ready = true;
+			while (f = fns.shift()) f();
+		};
+		if (docEl.doScroll) {
+			var check = function(){
+				try {
+					docEl.doScroll("left");
+					flush();
+				} catch(e) {
+					setTimeout(check, 10);
+				}
+			};
+			check();
+		}
+		Core.Events.addListener(doc, "DOMContentLoaded", fn = function(){
+			Core.Events.removeListener(doc, "DOMContentLoaded", fn);
+			flush();
+		});
+		return function( fn ){
+			ready ? fn() : fns.push(fn);
+		};
+	})();
 
 	APP.module = module;
 	APP.start = start;
@@ -163,4 +213,4 @@ var APP = APP || {};
 
 	win.log = Core.Log.write;
 
-})(APP, window);
+})(APP, window, document);
