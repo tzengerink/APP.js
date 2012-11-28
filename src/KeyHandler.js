@@ -19,7 +19,15 @@
  * Licensed under MIT License.
  * See: https://raw.github.com/Mytho/APP.js/master/LISENCE.md
  */
-APP.module("APP.KeyHandler", [document, APP.PubSub], function(doc, PubSub){
+APP.module("APP.KeyHandler", [
+	document,
+	APP.PubSub,
+	APP.Core.Events
+], function(
+	doc,
+	PubSub,
+	Events
+){
 
 	var KeyHandler = {},
 		prefix = "KeyHandler-",
@@ -49,17 +57,6 @@ APP.module("APP.KeyHandler", [document, APP.PubSub], function(doc, PubSub){
 			102:"num6", 103:"num7", 104:"num8", 105:"num9"
 		};
 
-	// @param  {object}    Element that triggers event
-	// @param  {string}    Name of the event
-	// @param  {function}  Function to execute on event
-	var addEvent = function( el, e, fn ){
-		if (el.addEventListener) {
-			el.addEventListener(e, fn, false);
-		} else if (el.attachEvent) {
-			el.attachEvent("on" + e, fn);
-		}
-	};
-
 	// @param  {object}  Event
 	var handle = function( e ){
 		if (/input|textarea|select/i.test((e.target || e.srcElement).nodeName))
@@ -85,7 +82,7 @@ APP.module("APP.KeyHandler", [document, APP.PubSub], function(doc, PubSub){
 	}
 
 	// Bind handle function to all key up events
-	addEvent(doc, "keyup", handle);
+	Events.addListener(doc, "keyup", handle);
 
 	return KeyHandler;
 
