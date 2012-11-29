@@ -82,7 +82,7 @@ APP.module("APP.KeyHandler", [
 	}
 
 	// Bind handle function to all key up events
-	Events.addListener(doc, "keyup", handle);
+	Events.bind(doc, "keyup", handle);
 
 	return KeyHandler;
 

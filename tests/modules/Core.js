@@ -39,12 +39,12 @@ test("module", function(){
 	deepEqual(APP.TestModule.testObject, { "key" : "value" }, "Define object.");
 });
 
-test("config", function(){
+test("Config", function(){
 	expect(4);
-	equal(typeof APP.Core.config(), "object", "Get configuration object.");
-	equal(typeof APP.Core.config("nonExistingKey"), "undefined", "Get undefined config key.");
-	equal(typeof APP.Core.config({ "key" : "value" }), "object", "Set config object.");
-	equal(APP.Core.config("key"), "value", "Get config variable.");
+	equal(typeof APP.Core.Config.get(), "object", "Get configuration object.");
+	equal(typeof APP.Core.Config.get("nonExistingKey"), "undefined", "Get undefined config key.");
+	equal(typeof APP.Core.Config.set({ "key" : "value" }), "object", "Set config object.");
+	equal(APP.Core.Config.get("key"), "value", "Get config variable.");
 });
 
 test("Log", function(){
@@ -61,9 +61,9 @@ test("Url", function(){
 		host = window.location.host,
 		base = protocol + "//" + host + "/" + testUriOne;
 	expect(3);
-	APP.Core.config({ baseUri:testUriOne });
+	APP.Core.Config.set({ baseUri:testUriOne });
 	equal(APP.Core.Url.base(), base, "Get base URL.");
-	APP.Core.config({ baseUri:testUriTwo });
+	APP.Core.Config.set({ baseUri:testUriTwo });
 	equal(APP.Core.Url.site("/test/"), base + "/test", "Strip slashes from provided URI.");
 	equal(APP.Core.Url.site("test"), base + "/test", "Strip slashes from provided URI.");
 });
@@ -89,7 +89,7 @@ test("start", function(){
 	expect(3);
 	ok(moduleVar, "Start modules.");
 	ok(subModuleVar, "Start submodules.");
-	equal(APP.Core.config("key"), "value", "Set configuration.");
+	equal(APP.Core.Config.get("key"), "value", "Set configuration.");
 });
 
 test("stop", function(){
