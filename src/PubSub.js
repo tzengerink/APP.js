@@ -22,9 +22,12 @@
  * See: https://raw.github.com/Mytho/APP.js/master/LISENCE.md
  */
 APP.module("APP.PubSub", function(){
+	"use strict";
 
-	var PubSub = {},
-		subscriptions = {};
+	var PubSub, subscriptions;
+
+	PubSub        = {};
+	subscriptions = {};
 
 	// @param  {string}  Topic name
 	PubSub.off = function( topic ){
@@ -61,5 +64,4 @@ APP.module("APP.PubSub", function(){
 	};
 
 	return PubSub;
-
 });

@@ -8,19 +8,17 @@ var APP = APP || {};
 
 /* CORE
  * ----
- * Core utilities for the application.
+ * Core utilities for an application.
  *
  * Copyright (c) 2012, T. Zengerink
  * Licensed under MIT License.
  * See: https://raw.github.com/Mytho/APP.js/master/LISENCE.md
  */
 (function(APP, win, doc){
-
 	"use strict";
 
-	var Config, Core, Events,
-		defaults,
-		extend, getModuleName, getNameSpace, handleSubmodules, module, namespaceFactory, ready, start, stop;
+	var Config, Core, Events, defaults, extend,
+		getModuleName, getNameSpace, handleSubmodules, module, namespaceFactory, ready, start, stop;
 
 	Core = {};
 
@@ -232,7 +230,7 @@ var APP = APP || {};
 	Core.Log = (function(){
 		var Log = {};
 
-		// Array container log history.
+		// Array containing log history.
 		Log.history = [];
 
 		// Write new arguments to the log.
@@ -271,8 +269,8 @@ var APP = APP || {};
 		return Url;
 	})();
 
-	Core.Config = Config;
 	Core.extend = extend;
+	Core.Config = Config;
 	Core.Events = Events;
 
 	APP.module = module;
@@ -282,5 +280,4 @@ var APP = APP || {};
 	APP.Core = Core;
 
 	win.log = Core.Log.write;
-
 })(APP, window, document);
