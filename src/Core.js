@@ -35,8 +35,12 @@ var APP = APP || {};
 	// @param   {object}  Source object
 	// @return  {object}  Extended object
 	extend = function( obj, source ) {
-		for (var key in source) {
-			obj[key] = source[key];
+		var key;
+
+		for (key in source) {
+			if (source.hasOwnProperty(key)) {
+				obj[key] = source[key];
+			}
 		}
 
 		return obj;
@@ -51,11 +55,10 @@ var APP = APP || {};
 		// @param   {string}  Item key
 		// @return  {mixed}   Item value
 		Config.get = function( key ){
-			if (typeof key === "undefined") {
+			if (key === undefined) {
 				return config;
-			} else {
-				return config[key];
 			}
+			return config[key];
 		};
 
 		// @param   {string}  Item key
@@ -70,7 +73,7 @@ var APP = APP || {};
 		};
 
 		return Config;
-	})();
+	}());
 
 	// Assist in binding event listeners. Bind event listeners in a cross browser
 	// compatible way.
@@ -100,28 +103,30 @@ var APP = APP || {};
 		};
 
 		return Events;
-	})();
+	}());
 
 	// Log application variables. It will store the variables in an history array,
 	// if in debug mode the variables will be passed to the console (if possible).
 	Log = (function(){
-		var Log = {};
+		var Log, i;
+
+		Log = {};
 
 		// Array containing log history.
 		Log.history = [];
 
 		// Write new arguments to the log.
 		Log.write = function(){
-			for (var i = arguments.length; i > 0; i--) {
+			for (i = arguments.length; i > 0; i--) {
 				Log.history.push(arguments[i - 1]);
 				if (Config.get("debug") && win.console) {
-					console.log(arguments[i - 1]);
+					win.console.log(arguments[i - 1]);
 				}
 			}
 		};
 
 		return Log;
-	})();
+	}());
 
 	// Assist in URL manipulation. The utility uses the `baseUri` config element
 	// to determine the full site URL.
@@ -152,7 +157,7 @@ var APP = APP || {};
 		};
 
 		return Url;
-	})();
+	}());
 
 	// @param   {string}  Namespace
 	// @return  {string}  Module name
@@ -187,7 +192,7 @@ var APP = APP || {};
 		// Check all properties of a module, if it is the start/stop method, then
 		// Execute it.
 		for (prop in module) {
-			if (isModule(prop)) {
+			if (module.hasOwnProperty(prop) && isModule(prop)) {
 				if (prop !== "Core" && module[prop].hasOwnProperty(method)) {
 					module[prop][method].call();
 				}
@@ -200,7 +205,7 @@ var APP = APP || {};
 	// @param  {array}     Dependancies (optional)
 	// @param  {function}  Module
 	module = function( ns, dep, fn ){
-		if (typeof fn === "undefined") {
+		if (fn === undefined) {
 			fn  = dep;
 			dep = [];
 		}
@@ -211,7 +216,7 @@ var APP = APP || {};
 
 		switch (typeof module) {
 			case "object":
-				namespace[moduleName] = extend((namespace[moduleName] || {}), module)
+				namespace[moduleName] = extend((namespace[moduleName] || {}), module);
 				break;
 			default:
 				namespace[moduleName] = module;
@@ -226,7 +231,7 @@ var APP = APP || {};
 			s = ns.split(Config.get("namespaceDelimiter")),
 			o = this;
 
-		for (; i < s.length; i++) {
+		for (i; i < s.length; i++) {
 			o[s[i]] = o[s[i]] || {};
 			o = o[s[i]];
 		}
@@ -237,7 +242,7 @@ var APP = APP || {};
 	// Execute functions when DOM is ready loading all elements. Please be aware
 	// when using iframes which are not supported.
 	ready = (function(){
-		var check, flush, fn, fns, docEl, ready;
+		var check, flush, f, fn, fns, docEl, ready;
 
 		fns   = [];
 		docEl = doc.documentElement;
@@ -246,7 +251,9 @@ var APP = APP || {};
 		// Execute all functions in the list and register that the DOM is ready.
 		flush = function(){
 			ready = true;
-			while (f = fns.shift()) f();
+			while (f = fns.shift()) {
+				f();
+			}
 		};
 
 		// Check if the document can be scrolled. This adds the ready functionality
@@ -257,7 +264,7 @@ var APP = APP || {};
 					docEl.doScroll("left");
 					flush();
 				} catch(e) {
-					setTimeout(check, 10);
+					win.setTimeout(check, 10);
 				}
 			};
 			check();
@@ -273,7 +280,7 @@ var APP = APP || {};
 		return function( fn ){
 			ready ? fn() : fns.push(fn);
 		};
-	})();
+	}());
 
 	// Start application and all submodules.
 	// @param  {object}  Application configuration
@@ -304,4 +311,4 @@ var APP = APP || {};
 	APP.Core    = Core;
 
 	win.log     = Core.Log.write;
-})(APP, window, document);
+}(APP, window, document));
