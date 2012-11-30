@@ -24,10 +24,8 @@
 APP.module("APP.PubSub", function(){
 	"use strict";
 
-	var PubSub, subscriptions;
-
-	PubSub        = {};
-	subscriptions = {};
+	var PubSub        = {},
+		subscriptions = {};
 
 	// @param  {string}  Topic name
 	PubSub.off = function( topic ){
