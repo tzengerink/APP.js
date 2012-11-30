@@ -170,17 +170,24 @@ var APP = APP || {};
 	// @param  {object}   Module object
 	// @param  {boolean}  Start/stop all submodules (default true)
 	handleSubmodules = function( module, start ) {
-		var prop, method;
+		var isModule, prop, method;
 
 		// Start or stop all submodules
 		method = start !== false
 			? Config.get("moduleStartMethod")
 			: Config.get("moduleStopMethod");
 
+		// @param  {mixed}    Module property
+		// @param  {boolean}  Propery is a module
+		isModule = function( prop ){
+			return typeof module[prop] === "object"
+				&& prop.charAt(0) === prop.charAt(0).toUpperCase();
+		};
+
 		// Check all properties of a module, if it is the start/stop method, then
 		// Execute it.
 		for (prop in module) {
-			if (typeof module[prop] === "object" && prop.charAt(0) === prop.charAt(0).toUpperCase()) {
+			if (isModule(prop)) {
 				if (prop !== "Core" && module[prop].hasOwnProperty(method)) {
 					module[prop][method].call();
 				}
