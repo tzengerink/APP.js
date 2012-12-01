@@ -53,11 +53,16 @@ APP.module("APP.PubSub", function(){
 	// @param  {string}  Topic name
 	// @param  {mixed}   Arguments to pass to callback
 	PubSub.trigger = function( topic, args ){
+		var t;
+
 		if (typeof topic !== "string") {
 			throw new Error("Topic must be a string");
 		}
-		for (var t in subscriptions[topic]) {
-			subscriptions[topic][t](args);
+
+		for (t in subscriptions[topic]) {
+			if (subscriptions[topic].hasOwnProperty(t)) {
+				subscriptions[topic][t](args);
+			}
 		}
 	};
 

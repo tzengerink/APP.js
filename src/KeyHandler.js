@@ -62,27 +62,28 @@ APP.module("APP.KeyHandler", [
 
 	// @param  {object}  Event
 	handle = function( e ){
-		if (/input|textarea|select/i.test((e.target || e.srcElement).nodeName))
+		if (/input|textarea|select/i.test((e.target || e.srcElement).nodeName)) {
 			return;
+		}
 		PubSub.trigger([prefix, keys[e.keyCode]].join(""), e);
 	};
 
 	// @param  {string}  Key name
 	KeyHandler.off = function( key ){
 		return PubSub.off([prefix, key.toLowerCase()].join(""));
-	}
+	};
 
 	// @param  {string}    Key name
 	// @param  {function}  Callback when pressed
 	KeyHandler.on = function( key, fn ){
 		return PubSub.on([prefix, key.toLowerCase()].join(""), fn);
-	}
+	};
 
 	// @param  {string}  Key name
 	// @param  {array}   Callback when pressed
 	KeyHandler.trigger = function( key, args ){
 		return PubSub.trigger([prefix, key.toLowerCase()].join(""), args);
-	}
+	};
 
 	// Bind handle function to all key up events
 	Events.bind(doc, "keyup", handle);
