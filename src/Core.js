@@ -223,7 +223,7 @@ var APP = APP || {};
 	namespaceFactory = function( ns ){
 		var i = 0,
 			s = ns.split(Config.get("namespaceDelimiter")),
-			o = this;
+			o = win;
 
 		for (i; i < s.length; i++) {
 			o[s[i]] = o[s[i]] || {};
