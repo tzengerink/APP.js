@@ -245,7 +245,7 @@ var APP = APP || {};
         // Execute all functions in the list and register that the DOM is ready.
         flush = function(){
             ready = true;
-            for (i = fns.length; i > 0; i--) {
+            for (i = fns.length - 1; i >= 0; i--) {
                 fns[i]();
             }
         };
