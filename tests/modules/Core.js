@@ -13,13 +13,4 @@
     equal(APP.Core.Config.get("key"), "value");
   });
 
-  test("Events", function() {
-    APP.Core.Events.bind(document, "click", function() {
-      console.log(true);
-      return true;
-    });
-    expect(1);
-    equal(document.click, true);
-  });
-
 }).call(this);
