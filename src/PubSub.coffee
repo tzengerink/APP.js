@@ -25,7 +25,7 @@ APP.module 'APP.PubSub', ->
     throw new Error 'Topic must be a string' if typeof topic is not 'string'
     subscriptions[topic] = []
 
-  # Execute callback function (`fn`) when a `topic` is triggered.
+  # Setup PubSub to execute callback function (`fn`) when a `topic` is triggered.
   on: (topic, fn) ->
     throw new Error 'Topic must be a string' if typeof topic is not 'string'
     throw new Error 'Callback must be a function' if typeof topic is not 'function'
@@ -33,7 +33,7 @@ APP.module 'APP.PubSub', ->
       subscriptions[topic] = []
     subscriptions[topic].push(fn)
 
-  # Trigger a `topic`, while passing `args` as the arguments to the callback.
+  # Trigger a `topic`, while passing `args` as the arguments for the called function.
   trigger: (topic, args) ->
     throw new Error 'Topic must be a string' if typeof topic is not 'string'
     for t of subscriptions[topic]
