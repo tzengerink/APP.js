@@ -24,15 +24,12 @@ window.APP = ((win, doc) ->
   # items.
   Config = (->
     config = extend {}, defaults
-
     {} =
-
       # Get configuration value for `key`, if not a valid `key` the entire 
       # `config` object will be returned.
       get: (key) -> 
         return config if not key
         config[key]
-
       # Set the `value` of a configuration `key`, the entire `config` object 
       # will be returned.
       set: (key, value) ->
@@ -45,14 +42,12 @@ window.APP = ((win, doc) ->
   # compatible way.
   Events = (->
     {} =
-
       # Bind an event listener to element `el`.
       bind: (el, e, fn) ->
         if el.addEventListener
           el.addEventListener e, fn, false
         else if el.attachEvent
           el.attachEvent "on" + e, fn
-
       # Unbind an event listener from element `el`.
       unbind: (el, e, fn) ->
         if el.removeEventListener
@@ -65,10 +60,8 @@ window.APP = ((win, doc) ->
   # if in debug mode the variables will be passed to the console (if possible).
   Log = (->
     {} =
-
       # Array containing the entire log history.
       history: []
-
       # Adds `arguments` to the history array and if present logs them in the 
       # console.
       write: ->
@@ -81,15 +74,12 @@ window.APP = ((win, doc) ->
   # to determine the full site URL.
   Url = (->
     strip = (str) -> str.replace /^\/|\/$/g, ""
-
     {} =
-
       # Get the base URL for the application.
       base: ->
         slash = "/" if strip Config.get "baseUri"
         [win.location.protocol, "//", win.location.host, slash, 
          strip Config.get "baseUri"].join("")
-
       # Get a full application URL for a given `uri`.
       site: (uri) -> [Url.base(), "/", strip(uri)].join("")
   )()
@@ -101,13 +91,11 @@ window.APP = ((win, doc) ->
   # any dependencies will be passed as arguments to the `callback`.
   module = (->
     getModuleName = (str) -> str.split(Config.get "delimiter").pop()
-
     # Get the namespace object without the module part when the `namespace`
     # is given as a string.
     getNamespace = (namespace) ->
       ns = namespace.split(Config.get "delimiter").slice(0, -1)
       namespaceFactory(ns.join(Config.get "delimiter"))
-
     # Create the namespace object when the `namespace` string is given.
     namespaceFactory = (namespace) ->
       obj = win
@@ -115,7 +103,6 @@ window.APP = ((win, doc) ->
         obj[mod] = obj[mod] or {}
         obj = obj[mod]
       obj
-
     (namespace, dependencies, callback) ->
       if typeof callback == "undefined"
         callback = dependencies
