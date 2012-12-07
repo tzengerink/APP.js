@@ -91,15 +91,15 @@ window.APP = ((win, doc) ->
   # any dependencies will be passed as arguments to the `callback`.
   module = (->
     getModuleName = (str) -> str.split(Config.get "delimiter").pop()
-    # Get the namespace object without the module part when the `namespace`
+    # Get the namespace object without the module part when the namespace
     # is given as a string.
-    getNamespace = (namespace) ->
-      ns = namespace.split(Config.get "delimiter").slice(0, -1)
+    getNamespace = (str) ->
+      ns = str.split(Config.get "delimiter").slice(0, -1)
       namespaceFactory(ns.join(Config.get "delimiter"))
-    # Create the namespace object when the `namespace` string is given.
-    namespaceFactory = (namespace) ->
+    # Create the namespace object when the namespace string is given.
+    namespaceFactory = (str) ->
       obj = win
-      for mod in namespace.split(Config.get "delimiter")
+      for mod in str.split(Config.get "delimiter")
         obj[mod] = obj[mod] or {}
         obj = obj[mod]
       obj
@@ -109,7 +109,8 @@ window.APP = ((win, doc) ->
         dependencies = []
       ns = getNamespace(namespace)
       mn = getModuleName(namespace)
-      module = (if typeof callback is "function" then callback.apply(this, dependencies) else callback)
+      module = callback
+      module = callback.apply(this, dependencies) if typeof module is "function"
       ns[mn] = module
       if typeof module is "object"
         ns[mn] = extend ns[mn] or {}, module
