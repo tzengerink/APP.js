@@ -67,7 +67,8 @@ window.APP = ((win, doc) ->
       write: ->
         for arg in arguments
           Log.history.push(arg)
-        win.console.log(arguments) if win.hasOwnProperty(console) and Config.get "debug"
+        if win.hasOwnProperty(console) and Config.get("debug")
+          win.console.log(arguments) 
   )()
 
   # Assist in URL manipulation. The utility uses the `baseUri` config element
@@ -77,9 +78,9 @@ window.APP = ((win, doc) ->
     {} =
       # Get the base URL for the application.
       base: ->
-        slash = "/" if strip Config.get "baseUri"
+        slash = "/" if strip Config.get("baseUri")
         [win.location.protocol, "//", win.location.host, slash, 
-         strip Config.get "baseUri"].join("")
+         strip Config.get("baseUri")].join("")
       # Get a full application URL for a given `uri`.
       site: (uri) -> [Url.base(), "/", strip(uri)].join("")
   )()
@@ -90,16 +91,16 @@ window.APP = ((win, doc) ->
   # value of the `callback` function will be assigned to the module and
   # any dependencies will be passed as arguments to the `callback`.
   module = (->
-    getModuleName = (str) -> str.split(Config.get "delimiter").pop()
+    getModuleName = (str) -> str.split(Config.get("delimiter")).pop()
     # Get the namespace object without the module part when the namespace
     # is given as a string.
     getNamespace = (str) ->
-      ns = str.split(Config.get "delimiter").slice(0, -1)
-      namespaceFactory(ns.join(Config.get "delimiter"))
+      ns = str.split(Config.get("delimiter")).slice(0, -1)
+      namespaceFactory(ns.join(Config.get("delimiter")))
     # Create the namespace object when the namespace string is given.
     namespaceFactory = (str) ->
       obj = win
-      for mod in str.split(Config.get "delimiter")
+      for mod in str.split(Config.get("delimiter"))
         obj[mod] = obj[mod] or {}
         obj = obj[mod]
       obj
@@ -116,6 +117,31 @@ window.APP = ((win, doc) ->
         ns[mn] = extend ns[mn] or {}, module
   )()
 
+  handleSubModules = (module, start) ->
+    method = Config.get("startMethod")
+    method = Config.get("stopMethod") if start is false
+    # Check if given property is truly a module.
+    isModule = (prop) ->
+      isObject = typeof module[prop] is "object"
+      startUpper = prop.charAt(0) is prop.charAt(0).toUpperCase()
+      isObject and startUpper
+    # Recursively check all properties of the module, if it is a proper
+    # start/stop method, then execute it.
+    for prop of module
+      if module.hasOwnProperty(prop) and isModule(prop)
+        if prop is not "Core" and module[prop].hasOwnPropery(method)
+          module[prop][method].call() 
+        handleSubModules(module[prop], start)
+
+  # Start application and all submodules. The `conf` object parameter will
+  # be used to extend the default configuration.
+  start = (conf) ->
+    Config.set conf
+    handleSubModules APP
+
+  # Stop all submodules.
+  stop = -> handleSubModules APP, false
+
   # ### Setup
 
   # Quick reference to log
@@ -124,6 +150,8 @@ window.APP = ((win, doc) ->
   # Return the object that will be assigned to `APP`.
   {} =
     module: module
+    start: start
+    stop: stop
     Core: {} =
       Config: Config
       Events: Events

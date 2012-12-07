@@ -36,9 +36,36 @@
     equal(APP.TestModule.SubModule.start(), true);
     equal(APP.TestModule.testMethod("test"), true);
     equal(APP.TestModule.testVar, 1234);
-    deepEqual(APP.TestModule.testObject, {
+    return deepEqual(APP.TestModule.testObject, {
       key: "value"
     });
+  });
+
+  test("start", function() {
+    var moduleVar, subModuleVar;
+    moduleVar = false;
+    subModuleVar = false;
+    APP.module("APP.Mod", function() {
+      return {
+        start: function() {
+          return moduleVar = true;
+        }
+      };
+    });
+    APP.module("APP.Mod.Sub", function() {
+      return {
+        start: function() {
+          return subModuleVar = true;
+        }
+      };
+    });
+    APP.start({
+      key: "value"
+    });
+    expect(3);
+    ok(moduleVar);
+    ok(subModuleVar);
+    return equal(APP.Core.Config.get("key"), "value");
   });
 
   test("Config", function() {
@@ -48,14 +75,14 @@
     equal(typeof APP.Core.Config.set({
       key: "value"
     }), "object");
-    equal(APP.Core.Config.get("key"), "value");
+    return equal(APP.Core.Config.get("key"), "value");
   });
 
   test("Log", function() {
     log("test1");
     log("test2");
     expect(1);
-    deepEqual(APP.Core.Log.history, ["test1", "test2"]);
+    return deepEqual(APP.Core.Log.history, ["test1", "test2"]);
   });
 
   test("Url", function() {
@@ -72,7 +99,7 @@
       baseUrl: testUriTwo
     });
     equal(APP.Core.Url.site("/test/"), base + "/test");
-    equal(APP.Core.Url.site("test"), base + "/test");
+    return equal(APP.Core.Url.site("test"), base + "/test");
   });
 
 }).call(this);
