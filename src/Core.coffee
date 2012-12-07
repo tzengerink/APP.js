@@ -18,7 +18,7 @@ window.APP = ((win, doc) ->
       obj[key] = src[key] if src.hasOwnProperty(key)
     return obj
 
-  #### SUBMODULES
+  # ### SUBMODULES
 
   # Assist in handling application configuration. Get and set configuration 
   # items.
@@ -96,11 +96,11 @@ window.APP = ((win, doc) ->
         return [Url.base(), "/", strip(uri)].join("")
   )()
 
-  #### PRIVATE
+  # ### PRIVATE
 
   # TODO
 
-  #### PUBLIC
+  # ### PUBLIC
 
   # Quick reference to log
   win.log = Log.write
