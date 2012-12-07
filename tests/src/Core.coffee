@@ -12,15 +12,15 @@ test "module", ->
     return {} =
       start: ->
         return true
-  #APP.module "APP.TestModule.testMethod", -> return (str) -> return str == "test"
-  #APP.module "APP.TestModule.testVar", 1234
-  #APP.module "APP.TestModule.testObject", key: "value"
-  expect 1
+  APP.module "APP.TestModule.testMethod", -> return (str) -> return str == "test"
+  APP.module "APP.TestModule.testVar", 1234
+  APP.module "APP.TestModule.testObject", key: "value"
+  expect 5
   equal APP.TestModule.start(), true
   equal APP.TestModule.SubModule.start(), true
-  #equal APP.TestModule.testMethod("test"), true
-  #equal APP.TestModule.testVar, 1234
-  #deepEqual APP.TestModule.testObject, key: "value"
+  equal APP.TestModule.testMethod("test"), true
+  equal APP.TestModule.testVar, 1234
+  deepEqual APP.TestModule.testObject, key: "value"
   return
 
 test "Config", ->
