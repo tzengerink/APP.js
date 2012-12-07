@@ -4,7 +4,7 @@
   window.APP = (function(win, doc) {
     "use strict";
 
-    var Config, Events, defaults, extend;
+    var Config, Events, Log, Url, defaults, extend;
     defaults = {
       baseUri: "",
       debug: false,
@@ -58,10 +58,46 @@
         }
       };
     })();
+    Log = (function() {
+      return {
+        history: [],
+        write: function() {
+          var arg, _i, _len;
+          for (_i = 0, _len = arguments.length; _i < _len; _i++) {
+            arg = arguments[_i];
+            Log.history.push(arg);
+          }
+          if (win.hasOwnProperty(console)) {
+            return win.console.log(arguments);
+          }
+        }
+      };
+    })();
+    Url = (function() {
+      var strip;
+      strip = function(str) {
+        return str.replace(/^\/|\/$/g, "");
+      };
+      return {
+        base: function() {
+          var slash;
+          if (strip(Config.get("baseUri"))) {
+            slash = "/";
+          }
+          return [win.location.protocol, "//", win.location.host, slash, strip(Config.get("baseUri"))].join("");
+        },
+        site: function(uri) {
+          return [Url.base(), "/", strip(uri)].join("");
+        }
+      };
+    })();
+    win.log = Log.write;
     return {
       Core: {
         Config: Config,
-        Events: Events
+        Events: Events,
+        Log: Log,
+        Url: Url
       }
     };
   })(window, document);

@@ -67,9 +67,41 @@ window.APP = ((win, doc) ->
 					el.detachEvent "on" + e, fn
 	)()
 
+	# Log application variables. It will store the variables in an history array,
+	# if in debug mode the variables will be passed to the console (if possible).
+	Log = (->
+		return {} =
+			history: []
+			write: ->
+				for arg in arguments
+					Log.history.push(arg)
+				win.console.log(arguments) if win.hasOwnProperty(console)
+	)()
+
+	# Assist in URL manipulation. The utility uses the `baseUri` config element
+	# to determine the full site URL.
+	Url = (->
+		strip = (str) ->
+			return str.replace /^\/|\/$/g, ""
+		return {} =
+			base: ->
+				slash = "/" if strip Config.get "baseUri"
+				return [
+					win.location.protocol, "//", win.location.host,
+					slash, strip Config.get "baseUri"
+				].join("")
+			site: (uri) ->
+				return [Url.base(), "/", strip(uri)].join("")
+	)()
+
+	# Quick reference to log
+	win.log = Log.write
+
 	return {} =
 		Core: {} =
 			Config: Config
 			Events: Events
+			Log:    Log
+			Url:    Url
 
 )(window, document)
