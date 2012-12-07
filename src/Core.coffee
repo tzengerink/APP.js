@@ -6,11 +6,8 @@ window.APP = ((win, doc) ->
   "use strict"
 
   defaults =
-    baseUri:     ""
-    debug:       false
-    stopMethod:  "start"
-    startMethod: "stop"
-    delimiter:   "."
+    baseUri: ""
+    debug:   true
 
   # Extend the `obj` with all properties of `src`.
   extend = (obj, src) ->
@@ -91,16 +88,16 @@ window.APP = ((win, doc) ->
   # value of the `callback` function will be assigned to the module and
   # any dependencies will be passed as arguments to the `callback`.
   module = (->
-    getModuleName = (str) -> str.split(Config.get("delimiter")).pop()
+    getModuleName = (str) -> str.split(".").pop()
     # Get the namespace object without the module part when the namespace
     # is given as a string.
     getNamespace = (str) ->
-      ns = str.split(Config.get("delimiter")).slice(0, -1)
-      namespaceFactory(ns.join(Config.get("delimiter")))
+      ns = str.split(".").slice(0, -1)
+      namespaceFactory(ns.join("."))
     # Create the namespace object when the namespace string is given.
     namespaceFactory = (str) ->
       obj = win
-      for mod in str.split(Config.get("delimiter"))
+      for mod in str.split(".")
         obj[mod] = obj[mod] or {}
         obj = obj[mod]
       obj
@@ -117,30 +114,65 @@ window.APP = ((win, doc) ->
         ns[mn] = extend ns[mn] or {}, module
   )()
 
+  # Execute functions when DOM is ready loading all elements. Please be aware
+  # when using iframes which are not supported.
+  ready = (->
+    done = false
+    fns = []
+    # Execute all functions in the list and register that the DOM is ready.
+    flush = ->
+      done = true
+      for fn in fns
+        console.log(fn)
+        fn.call()
+    # Check if the document can be scrolled. This adds the ready functionality
+    # for browsers that do not support the `DOMContentLoaded`-event.
+    if doc.documentElement
+      check = ->
+        try
+          doc.documentElement "left"
+          flush()
+        catch e
+          win.setTimeout check, 10
+      check()
+    # Add an event listener to the document that watches for the
+    # `DOMContentLoaded`-event.
+    Events.bind(doc, "DOMContentLoaded", fn = ->
+      Events.unbind doc, "DOMContentLoaded", fn
+      flush()
+    )
+    (fn) ->
+      if done
+        fn()
+      else
+        fns.push fn
+  )()
+
+  # Recursively check all submodules of `module` and execute it's start/stop
+  # method if it has one.
   handleSubModules = (module, start) ->
-    method = Config.get("startMethod")
-    method = Config.get("stopMethod") if start is false
+    method = (if start is false then "stop" else "start")
     # Check if given property is truly a module.
     isModule = (prop) ->
       isObject = typeof module[prop] is "object"
       startUpper = prop.charAt(0) is prop.charAt(0).toUpperCase()
       isObject and startUpper
-    # Recursively check all properties of the module, if it is a proper
-    # start/stop method, then execute it.
+    # Check all properties of the module, if it is a proper start/stop method,
+    # then execute it.
     for prop of module
       if module.hasOwnProperty(prop) and isModule(prop)
-        if prop is not "Core" and module[prop].hasOwnPropery(method)
+        if module[prop].hasOwnProperty(method)
           module[prop][method].call() 
         handleSubModules(module[prop], start)
 
   # Start application and all submodules. The `conf` object parameter will
   # be used to extend the default configuration.
   start = (conf) ->
-    Config.set conf
-    handleSubModules APP
+    Config.set(conf)
+    ready -> handleSubModules(APP)
 
   # Stop all submodules.
-  stop = -> handleSubModules APP, false
+  stop = -> handleSubModules(APP, false)
 
   # ### Setup
 
@@ -150,12 +182,11 @@ window.APP = ((win, doc) ->
   # Return the object that will be assigned to `APP`.
   {} =
     module: module
+    ready: ready
     start: start
     stop: stop
-    Core: {} =
-      Config: Config
-      Events: Events
-      Log:    Log
-      Url:    Url
-
+    Config: Config
+    Events: Events
+    Log:    Log
+    Url:    Url
 )(window, document)

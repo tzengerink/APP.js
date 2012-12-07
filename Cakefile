@@ -35,7 +35,6 @@ uglify = (callback) ->
   uglify.on 'exit', (code) ->
     callback?() if code is 0
 
-
 # ### TASKS
 
 task 'compile', 'Compile lib from src', ->
