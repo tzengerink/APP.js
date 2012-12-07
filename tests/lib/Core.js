@@ -3,6 +3,30 @@
 
   module("APP.Core");
 
+  APP.Core.Config.set("debug", true);
+
+  test("module", function() {
+    APP.module("APP.TestModule", [window, document], function(win, doc) {
+      return {
+        docObj: doc,
+        winObj: win,
+        start: function() {
+          return win.location.href === window.location.href;
+        }
+      };
+    });
+    APP.module("APP.TestModule.SubModule", function() {
+      return {
+        start: function() {
+          return true;
+        }
+      };
+    });
+    expect(1);
+    equal(APP.TestModule.start(), true);
+    equal(APP.TestModule.SubModule.start(), true);
+  });
+
   test("Config", function() {
     expect(4);
     equal(typeof APP.Core.Config.get(), "object");

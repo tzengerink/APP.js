@@ -1,7 +1,7 @@
-# Core utilities for an application.  
+# Core utilities for an application.
 #
 # Copyright &copy; 2012, T. Zengerink  
-# [Licensed under MIT License](https://raw.github.com/Mytho/APP.js/master/LISENCE.md)
+# See: [MIT License](https://raw.github.com/Mytho/APP.js/master/LISENCE.md)
 window.APP = ((win, doc) ->
   "use strict"
 
@@ -18,12 +18,13 @@ window.APP = ((win, doc) ->
       obj[key] = src[key] if src.hasOwnProperty(key)
     return obj
 
-  # ### SUBMODULES
+  # ### MODULES
 
   # Assist in handling application configuration. Get and set configuration 
   # items.
   Config = (->
     config = extend {}, defaults
+
     return {} =
 
       # Get configuration value for `key`, if not a valid `key` the entire 
@@ -73,7 +74,7 @@ window.APP = ((win, doc) ->
       write: ->
         for arg in arguments
           Log.history.push(arg)
-        win.console.log(arguments) if win.hasOwnProperty(console)
+        win.console.log(arguments) if win.hasOwnProperty(console) and Config.get "debug"
   )()
 
   # Assist in URL manipulation. The utility uses the `baseUri` config element
@@ -81,6 +82,7 @@ window.APP = ((win, doc) ->
   Url = (->
     strip = (str) ->
       return str.replace /^\/|\/$/g, ""
+
     return {} =
 
       # Get the base URL for the application.
@@ -96,9 +98,40 @@ window.APP = ((win, doc) ->
         return [Url.base(), "/", strip(uri)].join("")
   )()
 
-  # ### PRIVATE
+  # Get the module name when the entire `namespace` is given as a string.
+  getModuleName = (str) -> return str.split(Config.get "delimiter").pop()
 
-  # TODO
+  # Get the namespace object without the module part when the `namespace`
+  # is given as a string.
+  getNamespace = (namespace) ->
+    return namespaceFactory namespace.split(Config.get "delimiter")
+      .slice(0, 1).join(Config.get "delimiter")
+
+  # Get the namespace object when the `namespace` string is given.
+  namespaceFactory = (namespace) ->
+    obj = win
+    for module in namespace.split Config.get "delimiter"
+      obj[module] = obj[module] or {}
+      obj = obj[module]
+    return obj
+
+  # Define a new module when a `namespace` string is given. The return
+  # value of the `callback` function will be assigned to the module and
+  # any dependencies will be passed as arguments to the `callback`.
+  module = (namespace, dependencies, callback) ->
+    if typeof callback == "undefined"
+      callback = dependencies
+      dependencies = []
+    ns = getNamespace(namespace)
+    mn = getModuleName(namespace)
+    if typeof callback == "function"
+      module = callback.apply this, dependencies
+    else
+      module = callback
+    ns[mn] = module
+    if typeof module == "object"
+      ns[mn] = extend ns[mn] or {}, module 
+    return ns[mn]
 
   # ### PUBLIC
 
@@ -107,6 +140,7 @@ window.APP = ((win, doc) ->
 
   # Return the object that will be assigned to `APP`.
   return {} =
+    module: module
     Core: {} =
       Config: Config
       Events: Events
