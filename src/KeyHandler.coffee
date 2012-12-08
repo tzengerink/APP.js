@@ -14,11 +14,7 @@
 #
 # Copyright 2012, T. Zengerink  
 # See: [MIT License](https://raw.github.com/Mytho/APP.js/master/LISENCE.md)
-APP.module 'APP.KeyHandler', [
-  document
-  APP.PubSub
-  APP.Events
-], (doc, PubSub, Events) ->
+APP.module 'APP.KeyHandler', [document, APP.Events], (doc, Events) ->
   'use strict'
 
   prefix = 'KeyHandler-'
@@ -45,10 +41,10 @@ APP.module 'APP.KeyHandler', [
   # Only handle event (`e`) if focus not on input, textarea or select.
   handle = (e) -> 
     if not /input|textarea|select/i.test((e.target or e.srcElement).nodeName) 
-      PubSub.trigger([prefix, keys[e.keyCode]].join(''), e)
+      Events.trigger([prefix, keys[e.keyCode]].join(''), e)
 
   Events.bind(doc, 'keyup', handle)
 
-  off: (key) -> PubSub.off([prefix, key.toLowerCase()].join(''))
-  on: (key, fn) -> PubSub.on([prefix, key.toLowerCase()].join(''), fn)
-  trigger: (key, args) -> PubSub.trigger([prefix, key.toLowerCase()].join(''), args)
+  off: (key) -> Events.off([prefix, key.toLowerCase()].join(''))
+  on: (key, fn) -> Events.on([prefix, key.toLowerCase()].join(''), fn)
+  trigger: (key, args) -> Events.trigger([prefix, key.toLowerCase()].join(''), args)

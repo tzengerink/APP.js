@@ -110,6 +110,30 @@
     return equal(APP.Config.get('key'), 'value');
   });
 
+  test('Events', function() {
+    var testOff, testOn, testTrigger;
+    testOn = false;
+    testTrigger = false;
+    testOff = false;
+    APP.Events.on('news', function() {
+      return testOn = true;
+    });
+    APP.Events.trigger('news');
+    APP.Events.on('news', function(str) {
+      return testTrigger = str;
+    });
+    APP.Events.trigger('news', 'value');
+    APP.Events.on('news', function() {
+      return testOff = true;
+    });
+    APP.Events.off('news');
+    APP.Events.trigger('news');
+    expect(3);
+    ok(testOn);
+    equal(testTrigger, 'value');
+    return equal(testOff, false);
+  });
+
   test('Log', function() {
     log('test1');
     log('test2');

@@ -57,6 +57,22 @@ test 'Config', ->
 	equal typeof APP.Config.set(key: 'value'), 'object'
 	equal APP.Config.get('key'), 'value'
 
+test 'Events', ->
+  testOn = false
+  testTrigger = false
+  testOff = false
+  APP.Events.on 'news', -> testOn = true
+  APP.Events.trigger 'news'
+  APP.Events.on 'news', (str) -> testTrigger = str
+  APP.Events.trigger 'news', 'value'
+  APP.Events.on 'news', -> testOff = true
+  APP.Events.off 'news'
+  APP.Events.trigger 'news'
+  expect 3
+  ok testOn
+  equal testTrigger, 'value'
+  equal testOff, false
+
 test 'Log', ->
 	log('test1')
 	log('test2')

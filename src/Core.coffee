@@ -35,8 +35,10 @@ window.APP = ((win, doc) ->
   )()
 
   # Assist in binding event listeners. Bind event listeners in a cross browser
-  # compatible way.
+  # compatible way. The module also helps with basic Publish/Subscribe 
+  # functionality.
   Events = (->
+    subscriptions = {}
     # Bind an event listener to element `el`.
     bind: (el, e, fn) ->
       if el.addEventListener
@@ -49,6 +51,22 @@ window.APP = ((win, doc) ->
         el.removeEventListener e, fn, false
       else if el.detachEvent
         el.detachEvent 'on' + e, fn
+    # Unsubscribe from a given `topic`.
+    off: (topic) ->
+      throw new Error 'Topic must be a string' if typeof topic is not 'string'
+      subscriptions[topic] = []
+    # Setup PubSub to execute callback function (`fn`) when a `topic` is triggered.
+    on: (topic, fn) ->
+      throw new Error 'Topic must be a string' if typeof topic is not 'string'
+      throw new Error 'Callback must be a function' if typeof topic is not 'function'
+      if typeof subscriptions[topic] is 'undefined'
+        subscriptions[topic] = []
+      subscriptions[topic].push(fn)
+    # Trigger a `topic`, while passing `args` as the arguments for the called function.
+    trigger: (topic, args) ->
+      throw new Error 'Topic must be a string' if typeof topic is not 'string'
+      for t of subscriptions[topic]
+        subscriptions[topic][t](args) if subscriptions[topic].hasOwnProperty(t)
   )()
 
   # Log application variables. It will store the variables in an history array,
