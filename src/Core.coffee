@@ -53,18 +53,18 @@ window.APP = ((win, doc) ->
         el.detachEvent 'on' + e, fn
     # Unsubscribe from a given `topic`.
     off: (topic) ->
-      throw new Error 'Topic must be a string' if typeof topic is not 'string'
+      throw new Error 'Topic must be a string' if typeof topic isnt 'string'
       subscriptions[topic] = []
     # Setup PubSub to execute callback function (`fn`) when a `topic` is triggered.
     on: (topic, fn) ->
-      throw new Error 'Topic must be a string' if typeof topic is not 'string'
-      throw new Error 'Callback must be a function' if typeof topic is not 'function'
+      throw new Error 'Topic must be a string' if typeof topic isnt 'string'
+      throw new Error 'Callback must be a function' if typeof fn isnt 'function'
       if typeof subscriptions[topic] is 'undefined'
         subscriptions[topic] = []
       subscriptions[topic].push(fn)
     # Trigger a `topic`, while passing `args` as the arguments for the called function.
     trigger: (topic, args) ->
-      throw new Error 'Topic must be a string' if typeof topic is not 'string'
+      throw new Error 'Topic must be a string' if typeof topic isnt 'string'
       for t of subscriptions[topic]
         subscriptions[topic][t](args) if subscriptions[topic].hasOwnProperty(t)
   )()
@@ -79,7 +79,7 @@ window.APP = ((win, doc) ->
       write: ->
         for arg in arguments
           Log.history.push(arg)
-        if win.hasOwnProperty(console) and Config.get('debug')
+        if win.hasOwnProperty('console') and Config.get('debug')
           win.console.log(arguments) 
   )()
 
@@ -137,7 +137,6 @@ window.APP = ((win, doc) ->
     flush = ->
       done = true
       for fn in fns
-        console.log(fn)
         fn.call()
     # Check if the document can be scrolled. This adds the ready functionality
     # for browsers that do not support the `DOMContentLoaded`-event.
