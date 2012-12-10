@@ -43,7 +43,7 @@ module.exports = function(grunt) {
         },
         docco: {
             app: {
-                src: ['lib/*.js']
+                src: ['src/*.coffee']
             }
         },
         lint: {
@@ -113,5 +113,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-docco');
 
     // Default Task
-    grunt.registerTask('default', 'coffee lint concat min docco clean');
+    grunt.registerTask('default', 'coffee lint concat min clean docco');
 };
