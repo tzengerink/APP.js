@@ -189,10 +189,8 @@ window.APP = ((win, doc) ->
 
   # ### Setup
 
-  # Quick reference to log
-  win.log = Log.write
-
   # Return the object that will be assigned to `APP`.
+  log: Log.write
   module: module
   ready: ready
   start: start

@@ -128,8 +128,8 @@
     return equal(testOff, false);
   });
   test('Log', function() {
-    window.log('test1');
-    window.log('test2');
+    APP.log('test1');
+    APP.log('test2');
     expect(1);
     return deepEqual(APP.Log.history, ['test1', 'test2']);
   });
