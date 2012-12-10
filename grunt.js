@@ -49,7 +49,8 @@ module.exports = function(grunt) {
         lint: {
             app: [
                 'grunt.js',
-                'lib/*.js'
+                'lib/*.js',
+                'tests/lib/*.js'
             ]
         },
         min: {
@@ -76,14 +77,22 @@ module.exports = function(grunt) {
                 'nonew'     : true,
                 'onevar'    : true,
                 'plusplus'  : false,
-                'predef'    : ['module', 'APP'],
                 'quotmark'  : 'single',
                 'regexp'    : true,
                 'strict'    : true,
                 'trailing'  : true,
                 'undef'     : true,
                 'unused'    : true,
-                'white'     : false
+                'white'     : false,
+                'predef'    : [
+                    'APP',
+                    'deepEqual',
+                    'equal',
+                    'expect',
+                    'module',
+                    'ok',
+                    'test'
+                ]
             }
         },
         watch: {
@@ -105,5 +114,4 @@ module.exports = function(grunt) {
 
     // Default Task
     grunt.registerTask('default', 'coffee lint concat min docco clean');
-
 };
