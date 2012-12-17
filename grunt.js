@@ -22,41 +22,46 @@ module.exports = function(grunt) {
                 ' * <%= pkg.lisence.type %> lisenced, <%= pkg.lisence.url %>\n' +
                 ' */'
         },
-        clean: {
-            folder: 'tmp'
-        },
         coffee: {
             app: {
-                src: ['src/*.coffee'],
-                dest: 'lib/'
+                src: ['build/app.coffee'],
+                dest: 'build/'
             },
             tests: {
-                src: ['tests/src/*.coffee'],
-                dest: 'tests/lib/'
+                src: ['build/tests.coffee'],
+                dest: 'build/'
             }
         },
         concat: {
             app: {
-                src: ['lib/*.js'],
-                dest: 'tmp/app.js'
+                src: ['src/*.coffee'],
+                dest: 'build/app.coffee'
+            },
+            tests: {
+                src: ['tests/src/*.coffee'],
+                dest: 'build/tests.coffee'
             }
         },
         docco: {
             app: {
-                src: ['src/*.coffee']
+                src: ['build/app.coffee']
             }
         },
         lint: {
             app: [
                 'grunt.js',
-                'lib/*.js',
-                'tests/lib/*.js'
+                'build/app.js',
+                'build/tests.js'
             ]
         },
         min: {
             app: {
-                src: ['<banner>', '<config:concat.app.dest>'],
+                src: ['<banner>', '<config:coffee.app.dest>'],
                 dest: 'app.min.js'
+            },
+            tests: {
+                src: ['<config:coffee.tests.dest>'],
+                dest: 'tests/tests.min.js'
             }
         },
         jshint: {
@@ -98,20 +103,19 @@ module.exports = function(grunt) {
         watch: {
             app: {
                 files: ['<config:coffee.app.src>'],
-                tasks: 'coffee:app'
+                tasks: 'concat:app coffee:app'
             },
             tests: {
                 files: ['<config:coffee.tests.src>'],
-                tasks: 'coffee:tests'
+                tasks: 'concat:tests coffee:tests'
             }
         }
     });
 
     // Load Tasks
-    grunt.loadNpmTasks('grunt-clean');
     grunt.loadNpmTasks('grunt-coffee');
     grunt.loadNpmTasks('grunt-docco');
 
     // Default Task
-    grunt.registerTask('default', 'coffee lint concat min clean docco');
+    grunt.registerTask('default', 'concat coffee lint min docco');
 };

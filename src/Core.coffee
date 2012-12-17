@@ -1,7 +1,6 @@
+# CORE
+# ----
 # Core utilities for an application.
-#
-# Copyright 2012, T. Zengerink  
-# See: [MIT License](https://raw.github.com/Mytho/APP.js/master/LISENCE.md)
 window.APP = ((win, doc) ->
   'use strict'
 

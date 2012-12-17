@@ -1,4 +1,6 @@
-# KeyHandler is a lightweight JavaScript module, with **mimimum** key binding
+# KEYHANDLER
+# ----------
+# KeyHandler is a lightweight module, with **mimimum** key binding 
 # functionality. A function can be bound to a key like this:
 #
 #     APP.KeyHandler.bind 'R', ->
@@ -11,9 +13,6 @@
 # And to unbind:
 #
 #     APP.KeyHandler.unbind 'R'
-#
-# Copyright 2012, T. Zengerink  
-# See: [MIT License](https://raw.github.com/Mytho/APP.js/master/LISENCE.md)
 APP.module 'APP.KeyHandler', [document, APP.Events], (doc, Events) ->
   'use strict'
 
