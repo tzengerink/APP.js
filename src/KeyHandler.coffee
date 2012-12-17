@@ -1,4 +1,4 @@
-# KEYHANDLER
+# KeyHandler
 # ----------
 # KeyHandler is a lightweight module, with **mimimum** key binding 
 # functionality. A function can be bound to a key like this:

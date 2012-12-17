@@ -1,4 +1,4 @@
-# CORE
+# Core
 # ----
 # Core utilities for an application.
 window.APP = ((win, doc) ->
