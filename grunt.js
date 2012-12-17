@@ -56,11 +56,11 @@ module.exports = function(grunt) {
         },
         min: {
             app: {
-                src: ['<banner>', '<config:coffee.app.dest>'],
+                src: ['<banner>', 'build/app.js'],
                 dest: 'app.min.js'
             },
             tests: {
-                src: ['<config:coffee.tests.dest>'],
+                src: ['build/tests.js'],
                 dest: 'tests/tests.min.js'
             }
         },
