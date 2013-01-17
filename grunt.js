@@ -18,7 +18,7 @@ module.exports = function(grunt) {
             banner: '/*!\n' +
                 ' * <%= pkg.name %>\n' +
                 ' * Author: <%= pkg.author.name %> (<%= pkg.author.email %>)\n' +
-                ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
+                ' * Copyright (c) 2012-<%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
                 ' * <%= pkg.lisence.type %> lisenced, <%= pkg.lisence.url %>\n' +
                 ' */'
         },
