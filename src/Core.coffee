@@ -8,13 +8,16 @@ window.APP = ((win, doc) ->
     baseUri: ''
     debug:   true
 
+  # Concatinate a series of strings to a single string.
+  cat = -> Array.prototype.slice.call(arguments).join('')
+
   # Extend the `obj` with all properties of `src`.
   extend = (obj, src) ->
     for key of src
       obj[key] = src[key] if src.hasOwnProperty(key)
     obj
 
-  # ### Modules
+  # ### APP.Config
 
   # Assist in handling application configuration. Get and set configuration 
   # items.
@@ -32,6 +35,8 @@ window.APP = ((win, doc) ->
       config[key] = value
       config
   )()
+
+  # ### APP.Events
 
   # Assist in binding event listeners. Bind event listeners in a cross browser
   # compatible way. The module also helps with basic Publish/Subscribe 
@@ -68,10 +73,59 @@ window.APP = ((win, doc) ->
         subscriptions[topic][t](args) if subscriptions[topic].hasOwnProperty(t)
   )()
 
+  # ### APP.KeyHandler
+
+  # Assist in handling key bindings. A function can be bound:
+  # 
+  #     APP.KeyHandler.on 'R', -> alert('R is pressed');
+  #
+  # To trigger a keyup event:
+  #
+  #     APP.KeyHandler.trigger 'R'
+  #
+  # And to unbind:
+  #
+  #     APP.KeyHandler.off 'R'
+  #
+  KeyHandler = (->
+    prefix = 'KeyHandler-'
+
+    keys =
+        # Special keys
+        8:'backspace', 9:'tab', 13:'enter', 16:'shift', 17:'ctrl', 18:'alt',
+        # Arrow keys
+        37:'left', 38:'up', 39:'right', 40:'down',
+        # Numbers
+        48:'0', 49:'1', 50:'2', 51:'3', 52:'4', 53:'5', 54:'6', 55:'7', 56:'8',
+        57:'9',
+        # Alpha
+        65:'a', 66:'b', 67:'c', 68:'d', 69:'e', 70:'f', 71:'g', 72:'h', 73:'i',
+        74:'j', 75:'k', 76:'l', 77:'m', 78:'n', 79:'o', 80:'p', 81:'q', 82:'r',
+        83:'s', 84:'t', 85:'u', 86:'v', 87:'w', 88:'x', 89:'y', 90:'z',
+        # Function keys
+        112:'f1', 113:'f2', 114:'f3', 115:'f4', 116:'f5', 117:'f6', 118:'f7',
+        119:'f8', 120:'f9', 121:'f10', 122:'f11', 123:'f12',
+        # Numpad
+        96:'num0', 97:'num1', 98:'num2', 99:'num3', 100:'num4', 101:'num5',
+        102:'num6', 103:'num7', 104:'num8', 105:'num9'
+
+    # Only handle event `e` if focus not on input, textarea or select.
+    handle = (e) -> 
+      if not /input|textarea|select/i.test((e.target or e.srcElement).nodeName) 
+        Events.trigger(cat(prefix, keys[e.keyCode]), e)
+
+    Events.bind(doc, 'keyup', handle)
+
+    off: (key) -> Events.off(cat(prefix, key.toLowerCase()))
+    on: (key, fn) -> Events.on(cat(prefix, key.toLowerCase()), fn)
+    trigger: (key, args) -> Events.trigger(cat(prefix, key.toLowerCase()), args)
+  )()
+
+  # ### APP.Log
+
   # Log application variables. It will store the variables in an history array,
   # if in debug mode the variables will be passed to the console (if possible).
   Log = (->
-      # Array containing the entire log history.
       history: []
       # Adds `arguments` to the history array and if present logs them in the 
       # console.
@@ -82,6 +136,8 @@ window.APP = ((win, doc) ->
           win.console.log(arguments) 
   )()
 
+  # ### APP.Url
+
   # Assist in URL manipulation. The utility uses the `baseUri` config element
   # to determine the full site URL.
   Url = (->
@@ -89,10 +145,10 @@ window.APP = ((win, doc) ->
     # Get the base URL for the application.
     base: ->
       slash = '/' if strip Config.get('baseUri')
-      [win.location.protocol, '//', win.location.host, slash, 
-       strip Config.get('baseUri')].join('')
+      cat(win.location.protocol, '//', win.location.host, slash, 
+       strip Config.get('baseUri'))
     # Get a full application URL for a given `uri`.
-    site: (uri) -> [Url.base(), '/', strip(uri)].join('')
+    site: (uri) -> cat(Url.base(), '/', strip(uri))
   )()
 
   # ### Methods
@@ -188,14 +244,15 @@ window.APP = ((win, doc) ->
 
   # ### Setup
 
-  # Return the object that will be assigned to `APP`.
+  # Return the object that will be assigned to the `APP`-namespace.
+  Config: Config
+  Events: Events
+  KeyHandler: KeyHandler
+  Log: Log
+  Url: Url
   log: Log.write
   module: module
   ready: ready
   start: start
   stop: stop
-  Config: Config
-  Events: Events
-  Log:    Log
-  Url:    Url
 )(window, document)
