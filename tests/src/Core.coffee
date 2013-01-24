@@ -91,6 +91,28 @@
     equal testTrigger, 'value'
     equal testOff, false
 
+  test 'KeyHandler', ->
+    testOn = false
+    testTrigger = false
+    testOff = false
+    APP.KeyHandler.on 'r', ->
+      testOn = true
+      return
+    APP.KeyHandler.trigger 'r'
+    APP.KeyHandler.on 'r', (str) ->
+      testTrigger = str
+      return
+    APP.KeyHandler.trigger 'r', 'value'
+    APP.KeyHandler.on 'r', ->
+      testOff = true
+      return
+    APP.KeyHandler.off 'r'
+    APP.KeyHandler.trigger 'r'
+    expect 3
+    equal testTrigger, 'value'
+    ok testOn
+    equal testOff, false
+
   test 'Log', ->
     APP.log('test1')
     APP.log('test2')

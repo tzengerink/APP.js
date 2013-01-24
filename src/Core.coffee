@@ -132,8 +132,8 @@ window.APP = ((win, doc) ->
       write: ->
         for arg in arguments
           Log.history.push(arg)
-        if win.hasOwnProperty('console') and Config.get('debug')
-          win.console.log(arguments) 
+        if Config.get('debug') and win.console
+          win.console.log(arguments)
   )()
 
   # ### APP.Url
@@ -198,10 +198,10 @@ window.APP = ((win, doc) ->
     if doc.documentElement
       check = ->
         try
-          doc.documentElement 'left'
+          doc.documentElement.doScroll 'left'
           flush()
         catch e
-          win.setTimeout check, 10
+          win.setTimeout check, 20
       check()
     # Add an event listener to the document that watches for the
     # `DOMContentLoaded`-event.
