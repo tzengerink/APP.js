@@ -188,8 +188,10 @@ window.APP = ((win, doc) ->
   ready = (->
     done = false
     fns = []
+    t = false
     # Execute all functions in the list and register that the DOM is ready.
     flush = ->
+      clearTimeout t
       done = true
       for fn in fns
         fn.call()
@@ -201,7 +203,8 @@ window.APP = ((win, doc) ->
           doc.documentElement.doScroll 'left'
           flush()
         catch e
-          win.setTimeout check, 20
+          t = win.setTimeout check, 20
+        false
       check()
     # Add an event listener to the document that watches for the
     # `DOMContentLoaded`-event.
