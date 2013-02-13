@@ -76,7 +76,7 @@ window.APP = ((win, doc) ->
   # ### APP.KeyHandler
 
   # Assist in handling key bindings. A function can be bound:
-  # 
+  #
   #     APP.KeyHandler.on 'R', -> alert('R is pressed');
   #
   # To trigger a keyup event:
@@ -109,7 +109,7 @@ window.APP = ((win, doc) ->
         96:'num0', 97:'num1', 98:'num2', 99:'num3', 100:'num4', 101:'num5',
         102:'num6', 103:'num7', 104:'num8', 105:'num9'
 
-    # Only handle event `e` if focus not on input, textarea or select.
+    # Only handle event `e` if focus not on input, textarea or select
     handle = (e) -> 
       if not /input|textarea|select/i.test((e.target or e.srcElement).nodeName) 
         Events.trigger(cat(prefix, keys[e.keyCode]), e)
