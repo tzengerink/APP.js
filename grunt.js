@@ -3,25 +3,6 @@ module.exports = function(grunt) {
 
     // Configuration
     grunt.initConfig({
-        pkg: {
-            'name': 'APP.js',
-            'author': {
-                'name': 'T. Zengerink',
-                'email': 't.zengerink@gmail.com'
-            },
-            'lisence': {
-                'type': 'MIT',
-                'url': 'https://raw.github.com/Mytho/APP.js/master/LISENCE.md'
-            }
-        },
-        meta: {
-            banner: '/*!\n' +
-                ' * <%= pkg.name %>\n' +
-                ' * Author: <%= pkg.author.name %> (<%= pkg.author.email %>)\n' +
-                ' * Copyright (c) 2012-<%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
-                ' * <%= pkg.lisence.type %> lisenced, <%= pkg.lisence.url %>\n' +
-                ' */'
-        },
         coffee: {
             app: {
                 src: ['build/app.coffee'],
@@ -45,23 +26,6 @@ module.exports = function(grunt) {
         docco: {
             app: {
                 src: ['build/app.coffee']
-            }
-        },
-        lint: {
-            app: [
-                'grunt.js',
-                'build/app.js',
-                'build/tests.js'
-            ]
-        },
-        min: {
-            app: {
-                src: ['<banner>', 'build/app.js'],
-                dest: 'app.min.js'
-            },
-            tests: {
-                src: ['build/tests.js'],
-                dest: 'tests/tests.min.js'
             }
         },
         jshint: {
@@ -100,6 +64,33 @@ module.exports = function(grunt) {
                 ]
             }
         },
+        lint: {
+            app: [
+                'grunt.js',
+                'build/app.js',
+                'build/tests.js'
+            ]
+        },
+        meta: {
+            banner: '/*!\n' +
+                ' * <%= pkg.name %> v<%= pkg.version %>\n' +
+                ' * - - -\n' +
+                ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
+                ' * Released under <%= pkg.lisence.type %> lisenced\n' +
+                ' * <%= pkg.lisence.url %>\n' +
+                ' */'
+        },
+        min: {
+            app: {
+                src: ['<banner>', 'build/app.js'],
+                dest: 'app.min.js'
+            },
+            tests: {
+                src: ['build/tests.js'],
+                dest: 'tests/tests.min.js'
+            }
+        },
+        pkg: '<json:package.json>',
         watch: {
             app: {
                 files: ['<config:coffee.app.src>'],

@@ -1,0 +1,20 @@
+{
+	"version": "0.1.1",
+	"name": "APP.js",
+	"description": "JavaScript Application Core",
+	"author": {
+		"name": "T.Zengerink",
+		"email": "t.zengerink@gmail.com"
+	},
+	"lisence": {
+		"type": "MIT",
+		"url": "https://raw.github.com/Mytho/APP.js/master/LISENCE.md"
+	},
+	"scripts": {
+		"preinstall": "npm install -g grunt"
+	},
+	"dependencies": {
+		"grunt-coffee": ">=0.0.6",
+		"grunt-docco": ">=0.1.2"
+	}
+}
