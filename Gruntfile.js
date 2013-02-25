@@ -1,15 +1,14 @@
 module.exports = function(grunt) {
-    'use strict';
 
     // Configuration
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         coffee: {
-            app: {
-                'build/app.js': ['build/app.coffee']
-            },
-            tests: {
-                'build/tests.js': ['build/tests.coffee']
+            compile: {
+                files: {
+                    'build/app.js': 'build/app.coffee',
+                    'build/tests.js': 'build/tests.coffee'
+                }
             }
         },
         concat: {
@@ -51,7 +50,7 @@ module.exports = function(grunt) {
                 'plusplus'  : false,
                 'quotmark'  : 'single',
                 'regexp'    : true,
-                'strict'    : true,
+                'strict'    : false,
                 'trailing'  : true,
                 'undef'     : true,
                 'unused'    : true,
@@ -75,13 +74,17 @@ module.exports = function(grunt) {
                     ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
                     ' * Released under <%= pkg.lisence.type %> lisenced\n' +
                     ' * <%= pkg.lisence.url %>\n' +
-                    ' */'
+                    ' */\n'
             },
             app: {
-                'app.min.js': ['<banner>', 'build/app.js']
+                files: {
+                    'app.min.js': ['<banner>', 'build/app.js']
+                }
             },
             tests: {
-                'tests/tests/min.js': ['build/tests.js']
+                files: {
+                    'tests/tests.min.js': ['build/tests.js']
+                }
             }
         },
         watch: {
@@ -106,4 +109,5 @@ module.exports = function(grunt) {
 
     // Default Task
     grunt.registerTask('default', ['concat', 'coffee', 'jshint', 'uglify', 'docco']);
+
 };

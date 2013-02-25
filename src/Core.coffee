@@ -2,8 +2,6 @@
 # ----
 # Core utilities for an application.
 window.APP = ((win, doc) ->
-  'use strict'
-
   defaults =
     baseUri: ''
     debug: false
