@@ -3,14 +3,13 @@ module.exports = function(grunt) {
 
     // Configuration
     grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
         coffee: {
             app: {
-                src: ['build/app.coffee'],
-                dest: 'build/'
+                'build/app.js': ['build/app.coffee']
             },
             tests: {
-                src: ['build/tests.coffee'],
-                dest: 'build/'
+                'build/tests.js': ['build/tests.coffee']
             }
         },
         concat: {
@@ -25,10 +24,14 @@ module.exports = function(grunt) {
         },
         docco: {
             app: {
+                options: {
+                    output: 'docs'
+                },
                 src: ['build/app.coffee']
             }
         },
         jshint: {
+            files: ['Gruntfile.js', 'build/app.js', 'build/tests.js'],
             options: {
                 'bitwise'   : true,
                 'browser'   : true,
@@ -64,33 +67,23 @@ module.exports = function(grunt) {
                 ]
             }
         },
-        lint: {
-            app: [
-                'grunt.js',
-                'build/app.js',
-                'build/tests.js'
-            ]
-        },
-        meta: {
-            banner: '/*!\n' +
-                ' * <%= pkg.name %> v<%= pkg.version %>\n' +
-                ' * - - -\n' +
-                ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
-                ' * Released under <%= pkg.lisence.type %> lisenced\n' +
-                ' * <%= pkg.lisence.url %>\n' +
-                ' */'
-        },
-        min: {
+        uglify: {
+            options: {
+                banner: '/*!\n' +
+                    ' * <%= pkg.name %> v<%= pkg.version %>\n' +
+                    ' * - - -\n' +
+                    ' * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
+                    ' * Released under <%= pkg.lisence.type %> lisenced\n' +
+                    ' * <%= pkg.lisence.url %>\n' +
+                    ' */'
+            },
             app: {
-                src: ['<banner>', 'build/app.js'],
-                dest: 'app.min.js'
+                'app.min.js': ['<banner>', 'build/app.js']
             },
             tests: {
-                src: ['build/tests.js'],
-                dest: 'tests/tests.min.js'
+                'tests/tests/min.js': ['build/tests.js']
             }
         },
-        pkg: '<json:package.json>',
         watch: {
             app: {
                 files: ['<config:coffee.app.src>'],
@@ -104,9 +97,13 @@ module.exports = function(grunt) {
     });
 
     // Load Tasks
-    grunt.loadNpmTasks('grunt-coffee');
+    grunt.loadNpmTasks('grunt-contrib-coffee');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-docco');
 
     // Default Task
-    grunt.registerTask('default', 'concat coffee lint min docco');
+    grunt.registerTask('default', ['concat', 'coffee', 'jshint', 'uglify', 'docco']);
 };
