@@ -6,7 +6,7 @@ window.APP = ((win, doc) ->
 
   defaults =
     baseUri: ''
-    debug:   true
+    debug: false
 
   # Concatinate a series of strings to a single string.
   cat = -> Array.prototype.slice.call(arguments).join('')
