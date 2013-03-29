@@ -46,22 +46,6 @@
     ok subModuleVar
     equal APP.Config.get('key'), 'value'
 
-  test 'stop', ->
-    moduleVar = false
-    subModuleVar = false
-    APP.module 'APP.Mod', ->
-      stop: ->
-        moduleVar = true
-        return
-    APP.module 'APP.Mod.Sub', ->
-      stop: ->
-        subModuleVar = true
-        return
-    APP.stop()
-    expect 2
-    ok moduleVar
-    ok subModuleVar
-
   test 'Config', ->
     expect 4
     equal typeof APP.Config.get(), 'object'

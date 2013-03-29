@@ -183,10 +183,11 @@ window.APP = ((win, doc) ->
       ns[mn] = module
       if typeof module is 'object'
         ns[mn] = extend ns[mn] or {}, module
+      ready module.start if typeof module.start is 'function'
   )()
 
   # Execute functions when DOM is ready loading all elements. Please be aware
-  # when using iframes which are not supported.
+  # when using iframes, they are not supported.
   ready = (->
     done = false
     fns = []
@@ -221,31 +222,9 @@ window.APP = ((win, doc) ->
         fns.push fn
   )()
 
-  # Recursively check all submodules of `module` and execute it's start/stop
-  # method if it has one.
-  handleSubModules = (module, start) ->
-    method = (if start is false then 'stop' else 'start')
-    # Check if given property is truly a module.
-    isModule = (prop) ->
-      isObject = typeof module[prop] is 'object'
-      startUpper = prop.charAt(0) is prop.charAt(0).toUpperCase()
-      isObject and startUpper
-    # Check all properties of the module, if it is a proper start/stop method,
-    # then execute it.
-    for prop of module
-      if module.hasOwnProperty(prop) and isModule(prop)
-        if module[prop].hasOwnProperty(method)
-          module[prop][method].call() 
-        handleSubModules(module[prop], start)
-
   # Start application and all submodules. The `conf` object parameter will
   # be used to extend the default configuration.
-  start = (conf) ->
-    Config.set(conf)
-    ready -> handleSubModules(APP)
-
-  # Stop all submodules.
-  stop = -> handleSubModules(APP, false)
+  start = (conf) -> Config.set(conf)
 
   # ### Setup
 
@@ -259,5 +238,4 @@ window.APP = ((win, doc) ->
   module: module
   ready: ready
   start: start
-  stop: stop
 )(window, document)
