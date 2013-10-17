@@ -106,11 +106,12 @@
   test 'Url', ->
     testUriOne = 'some/long/uri'
     testUriTwo = '/some/long/uri/'
-    base = window.location.protocol + '//' + window.location.host + '/' + testUriOne
+    httpBase = 'http://' + window.location.host + '/' + testUriOne
+    httpsBase = 'https://' + window.location.host + '/' + testUriOne
     expect 3
     APP.Config.set(baseUri: testUriOne)
-    equal APP.Url.base(), base
+    equal APP.Url.base(), httpBase
     APP.Config.set(baseUrl: testUriTwo)
-    equal APP.Url.site('/test/'), base + '/test'
-    equal APP.Url.site('test'), base + '/test'
+    equal APP.Url.site('/test/'), httpBase + '/test'
+    equal APP.Url.site('test', 'https'), httpsBase + '/test'
 )()

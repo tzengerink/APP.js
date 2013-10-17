@@ -29,43 +29,6 @@ module.exports = function(grunt) {
                 src: ['build/app.coffee']
             }
         },
-        jshint: {
-            files: ['Gruntfile.js', 'build/app.js', 'build/tests.js'],
-            options: {
-                'bitwise'   : true,
-                'browser'   : true,
-                'camelcase' : true,
-                'curly'     : true,
-                'eqeqeq'    : true,
-                'forin'     : true,
-                'immed'     : true,
-                'indent'    : 4,
-                'latedef'   : true,
-                'maxerr'    : 50,
-                'newcap'    : true,
-                'noarg'     : true,
-                'noempty'   : true,
-                'nonew'     : true,
-                'onevar'    : true,
-                'plusplus'  : false,
-                'quotmark'  : 'single',
-                'regexp'    : true,
-                'strict'    : false,
-                'trailing'  : true,
-                'undef'     : true,
-                'unused'    : true,
-                'white'     : false,
-                'predef'    : [
-                    'APP',
-                    'deepEqual',
-                    'equal',
-                    'expect',
-                    'module',
-                    'ok',
-                    'test'
-                ]
-            }
-        },
         uglify: {
             options: {
                 banner: '/*!\n' +
@@ -102,12 +65,11 @@ module.exports = function(grunt) {
     // Load Tasks
     grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-docco');
 
     // Default Task
-    grunt.registerTask('default', ['concat', 'coffee', 'jshint', 'uglify', 'docco']);
+    grunt.registerTask('default', ['concat', 'coffee', 'uglify', 'docco']);
 
 };
