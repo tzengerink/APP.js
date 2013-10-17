@@ -145,12 +145,12 @@ window.APP = ((win, doc) ->
   Url = (->
     strip = (str) -> str.replace /^\/|\/$/g, ''
     # Get the base URL for the application.
-    base: ->
+    base: (protocol) ->
       slash = '/' if strip Config.get('baseUri')
-      cat(win.location.protocol, '//', win.location.host, slash, 
+      cat(protocol || win.location.protocol.replace(':', ''), '://', win.location.host, slash, 
        strip Config.get('baseUri'))
     # Get a full application URL for a given `uri`.
-    site: (uri) -> cat(Url.base(), '/', strip(uri))
+    site: (uri, protocol) -> cat(Url.base(protocol), '/', strip(uri))
   )()
 
   # ### Methods
